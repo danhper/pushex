@@ -1,4 +1,8 @@
 defmodule Pushex.GCM.Client.HTTP do
+  @moduledoc """
+  Implementation of `Pushex.GCM.Client` sending HTTP requests to the GCM API
+  """
+
   use HTTPoison.Base
 
   @behaviour Pushex.GCM.Client
@@ -23,9 +27,9 @@ defmodule Pushex.GCM.Client.HTTP do
     [{"Content-Type", "application/json"} | headers]
   end
 
-  def send_notification(notification) do
-    headers = [{"Authorization", "key=#{notification.app.auth_key}"}]
-    post("send", notification, headers) |> process_notification_response
+  def send_notification(request) do
+    headers = [{"Authorization", "key=#{request.app.auth_key}"}]
+    post("send", request, headers) |> process_notification_response
   end
 
   defp process_notification_response({:ok, %HTTPoison.Response{status_code: 200, body: body}}) do

@@ -11,7 +11,8 @@ defmodule Pushex.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpoison]]
+    [applications: [:logger, :httpoison],
+     mod: {Pushex, []}]
   end
 
   defp deps do

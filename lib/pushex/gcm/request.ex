@@ -1,4 +1,4 @@
-defmodule Pushex.GCM.Notification do
+defmodule Pushex.GCM.Request do
   use Vex.Struct
 
   defstruct [
@@ -91,7 +91,7 @@ defmodule Pushex.GCM.Notification do
   end
 end
 
-defimpl Poison.Encoder, for: Pushex.GCM.Notification do
+defimpl Poison.Encoder, for: Pushex.GCM.Request do
   def encode(notification, options) do
     Map.from_struct(notification)
     |> Enum.filter(fn {_key, value} -> not is_nil(value) end)

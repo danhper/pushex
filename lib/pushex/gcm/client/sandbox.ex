@@ -1,11 +1,11 @@
 defmodule Pushex.GCM.Client.Sandbox do
   @behaviour Pushex.GCM.Client
 
-  def send_notification(notification) do
-    if notification.to == :bad_id do
-      {:error, %Pushex.GCM.Error{status_code: 401, reason: "not authorized"}}
+  def send_notification(request) do
+    if request.to == :bad_id do
+      {:error, %Pushex.GCM.HTTPError{status_code: 401, reason: "not authorized"}}
     else
-      count = if notification.registration_ids, do: Enum.count(notification.registration_ids), else: 1
+      count = if request.registration_ids, do: Enum.count(request.registration_ids), else: 1
       results = Enum.each(0..count, &(%{"message_id": "#{&1}:123456#{&1}"}))
       response = %Pushex.GCM.Response{canonical_ids: 0,
                                       success: count,

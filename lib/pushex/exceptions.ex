@@ -11,3 +11,11 @@ defmodule Pushex.ValidationError do
     "error on :#{field} with :#{validator} validator: #{error}"
   end
 end
+
+defmodule Pushex.AppNotFoundError do
+  defexception [:platform, :name]
+
+  def message(err) do
+    "could not find an app named #{inspect(err.name)} for platform #{inspect(err.platform)}"
+  end
+end
