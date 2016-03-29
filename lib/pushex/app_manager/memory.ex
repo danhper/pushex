@@ -1,4 +1,7 @@
 defmodule Pushex.AppManager.Memory do
+  @moduledoc """
+  An in memory implementation using a `GenServer` for `Pushex.AppManager`
+  """
   use GenServer
 
   @behaviour Pushex.AppManager

@@ -1,4 +1,6 @@
 defmodule Pushex.GCM.Client.Sandbox do
+  @moduledoc false
+
   @behaviour Pushex.GCM.Client
 
   def send_notification(request) do

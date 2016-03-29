@@ -1,4 +1,6 @@
 defmodule Pushex.GCM.Worker do
+  @moduledoc false
+
   use GenServer
 
   @doc false

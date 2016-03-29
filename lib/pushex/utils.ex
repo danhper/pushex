@@ -1,4 +1,6 @@
 defmodule Pushex.Utils do
+  @moduledoc false
+
   @doc """
   Loads the application defined in the configuration file.
   """

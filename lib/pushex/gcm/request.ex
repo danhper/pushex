@@ -1,4 +1,12 @@
 defmodule Pushex.GCM.Request do
+  @moduledoc """
+  `Pushex.GCM.Request` represents a request that will be sent to GCM.
+  It contains the notification, and all the metadata that can be sent with it.
+
+  Only the key with a value will be sent to GCM, so that the proper default
+  are used.
+  """
+
   use Vex.Struct
 
   defstruct [

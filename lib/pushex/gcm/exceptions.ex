@@ -1,4 +1,8 @@
 defmodule Pushex.GCM.HTTPError do
+  @moduledoc """
+  `Pushex.GCM.HTTPError` represents a failed request to GCM API.
+  """
+
   defexception [:status_code, :reason]
 
   def message(err) do

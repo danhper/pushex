@@ -1,4 +1,6 @@
 defmodule Pushex.GCM.Helpers do
+  @moduledoc false
+
   @default_app Application.get_env(:pushex, :gcm)[:default_app]
 
   @doc """

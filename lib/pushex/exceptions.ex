@@ -1,4 +1,7 @@
 defmodule Pushex.ValidationError do
+  @moduledoc """
+  `Pushex.ValidationError` is raised when a request contains invalid or incomplete data
+  """
   defexception [:errors]
 
   def message(err) do
@@ -13,6 +16,10 @@ defmodule Pushex.ValidationError do
 end
 
 defmodule Pushex.AppNotFoundError do
+  @moduledoc """
+  `Pushex.AppNotFoundError` is raised when the app to send the request do not exist.
+  """
+
   defexception [:platform, :name]
 
   def message(err) do
