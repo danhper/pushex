@@ -18,7 +18,7 @@ defmodule Pushex.GCM.RequestTest do
   end
 
   test "create returns error on failure" do
-    assert {:error, [{:error, :to, :type, "must be of type :binary"}]} = Request.create(app: @app, to: 1)
+    assert {:error, [{:error, :to, :type, "must be of type :binary or nil"}]} = Request.create(app: @app, to: 1)
     assert {:error, _} = Request.create(app: @app, foo: "bar")
   end
 

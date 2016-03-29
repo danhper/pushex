@@ -44,28 +44,28 @@ defmodule Pushex.GCM.Request do
     presence: true,
     type: [is: Pushex.GCM.App]
   validates :registration_ids,
-    type: [is: [list: :binary], allow_nil: true],
+    type: [is: [[list: :binary], :nil]],
     presence: [if: [to: nil]]
   validates :to,
-    type: [is: :binary, allow_nil: true],
+    type: [is: [:binary, :nil]],
     presence: [if: [registration_ids: nil]]
   validates :collapse_key,
-    type: [is: :binary, allow_nil: true]
+    type: [is: [:binary, :nil]]
   validates :priority,
-    type: [is: :atom, allow_nil: true],
+    type: [is: [:atom, :nil]],
     inclusion: [in: ~w(high normal), allow_nil: true]
   validates :content_available,
-    type: [is: :boolean, allow_nil: true]
+    type: [is: [:boolean, :nil]]
   validates :delay_while_idle,
-    type: [is: :boolean, allow_nil: true]
+    type: [is: [:boolean, :nil]]
   validates :time_to_live,
-    type: [is: :integer, allow_nil: true]
+    type: [is: [:integer, :nil]]
   validates :restricted_package_name,
-    type: [is: :binary, allow_nil: true]
+    type: [is: [:binary, :nil]]
   validates :data,
-    type: [is: :map, allow_nil: true]
+    type: [is: [:map, :nil]]
   validates :notification,
-    type: [is: :map, allow_nil: true],
+    type: [is: [:map, :nil]],
     by: &__MODULE__.validate_notification/1
 
 
