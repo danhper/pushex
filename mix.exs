@@ -1,7 +1,7 @@
 defmodule Pushex.Mixfile do
   use Mix.Project
 
-  @version "0.0.1"
+  @version "0.0.2"
 
   def project do
     [app: :pushex,
@@ -24,7 +24,7 @@ defmodule Pushex.Mixfile do
 
   defp deps do
     [{:httpoison, "~> 0.8"},
-     {:poison,    "~> 2.1"},
+     {:poison,    "~> 1.5 or ~> 2.1"},
      {:vex,       github: "tuvistavie/vex", branch: "add-type-validator"},
      {:earmark,   "~> 0.1", only: :dev},
      {:ex_doc,    "~> 0.11", only: :dev}]
