@@ -15,6 +15,20 @@ defmodule Pushex.GCM.Notification do
     :notification
   ]
 
+  @type t :: %__MODULE__{
+    app: Pushex.GCM.App.t,
+    registration_ids: [String.t],
+    to: String.t,
+    collapse_key: String.t,
+    priority: atom,
+    content_available: boolean,
+    delay_while_idle: boolean,
+    time_to_live: non_neg_integer,
+    restricted_package_name: String.t,
+    data: map,
+    notification: map
+  }
+
   @notification_valid_keys ~w(title body icon sound badge tag color click_action body_loc_key
                               body_loc_args title_loc_key title_loc_args)a
 

@@ -1,10 +1,9 @@
 defmodule Pushex.GCM.App do
   use Vex.Struct
 
-  defstruct [
-    :name,
-    :auth_key
-  ]
+  defstruct [:name, :auth_key]
+
+  @type t :: %__MODULE__{name: String.t, auth_key: String.t}
 
   validates :name,
     presence: true,
