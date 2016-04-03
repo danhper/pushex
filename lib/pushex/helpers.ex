@@ -45,8 +45,11 @@ defmodule Pushex.Helpers do
     end
   end
 
-  defp send_notification(notification, :gcm, opts) do
+  defp send_notification(notification, platform, opts) when platform in [:gcm, "gcm"] do
     send_gcm_notification(notification, opts)
+  end
+  defp send_notification(_notification, platform, _opts) when not is_nil(platform) do
+    raise ArgumentError, "#{inspect(platform)} is not a valid platform"
   end
   defp send_notification(_notification, _, _opts) do
     raise ArgumentError, "you must provide either :with_app or :using"

@@ -1,6 +1,8 @@
 defmodule Pushex.GCM.Client.Sandbox do
   @moduledoc false
 
+  use GenServer
+
   @behaviour Pushex.GCM.Client
 
   def send_notification(request) do

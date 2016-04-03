@@ -20,8 +20,8 @@ defmodule Pushex.ResponseHandler do
     info     :: {pid, reference}) :: :ok
 
   def handle_response(response, request, info) do
-    impl.handle_response(response, request, info)
+    Enum.each(response_handlers, &(&1.handle_response(response, request, info)))
   end
 
-  defp impl, do: Application.get_env(:pushex, :response_handler_impl)
+  defp response_handlers, do: Application.get_env(:pushex, :response_handlers)
 end

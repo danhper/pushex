@@ -117,7 +117,7 @@ To handle responses, you can define a module implementing the `Pushex.ResponseHa
 ```elixir
 # config.exs
 config :pushex,
-  response_handler_impl: MyResponseHandler
+  response_handlers: [MyResponseHandler]
 
 # my_response_handler.ex
 defmodule MyResponseHandler do
@@ -129,3 +129,49 @@ end
 ```
 
 The `ref` passed here is the one returned when calling `send_notification`.
+
+## Testing
+
+Pushex offers a sandbox mode to make testing easier.
+
+To enable it, you should add the following to your configuration:
+
+```
+config :pushex,
+  sandbox: true
+```
+
+Once you are using the sandbox, the messages will not be sent to GCM or APNS anymore,
+but stored in `Pushex.Sandbox`. Furthermore, all the messages will be returned
+to the process that sent them.
+Here is a sample test.
+
+```elixir
+test "send notification to users" do
+  ref = Pushex.send_notification(%{body: "my message"}, to: "my-user", using: :gcm)
+  pid = self()
+  assert_receive {{:ok, response}, request, ^ref}
+  assert [{{:ok, ^response}, ^request, {^pid, ^ref}}] = Pushex.Sandbox.list_notifications
+end
+```
+
+Note that `list_notifications` depends on the running process, so
+if you call it from another process, you need to explicitly pass the pid with the `:pid` option.
+
+Also note that `Pushex.send_notification` is asynchronous, so if you
+remove the `assert_receive`, you will have a race condition.
+To avoid this, you can use `Pushex.wait_notifications/1` instead of `Pushex.list_notifications`.
+It will wait (by default for `100ms`) until at least `:count` notifications arrive
+
+```elixir
+test "send notification to users and wait" do
+  Enum.each (1..10), fn _ ->
+    Helpers.send_notification(%{body: "foo"}, to: "whoever", using: :gcm)
+  end
+  notifications = Pushex.Sandbox.wait_notifications(count: 10, timeout: 50)
+  assert length(notifications) == 10
+end
+```
+
+However, the requests are asynchronous, so there is no guaranty that the notifications
+in the sandbox will in the same order they have been sent.

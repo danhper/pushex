@@ -1,12 +1,5 @@
 defmodule Pushex.UtilsTest do
-  use ExUnit.Case
-
-  setup do
-    config = Application.get_all_env(:pushex)
-    on_exit fn ->
-      Enum.each(config, fn {k, v} -> Application.put_env(:pushex, k, v) end)
-    end
-  end
+  use Pushex.Case
 
   test "load_apps_from_config load all apps" do
     apps = Pushex.Utils.load_apps_from_config

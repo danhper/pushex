@@ -7,6 +7,7 @@ defmodule Pushex.Mixfile do
     [app: :pushex,
      version: @version,
      elixir: "~> 1.2",
+     elixirc_paths: elixirc_paths(Mix.env),
      description: "Mobile push notification library",
      source_url: "https://github.com/tuvistavie/pushex",
      build_embedded: Mix.env == :prod,
@@ -22,6 +23,9 @@ defmodule Pushex.Mixfile do
      description: 'Mobile push notification library']
   end
 
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_),     do: ["lib"]
+
   defp deps do
     [{:httpoison, "~> 0.8"},
      {:poison,    "~> 1.5 or ~> 2.1"},
@@ -33,6 +37,7 @@ defmodule Pushex.Mixfile do
   defp package do
     [
       maintainers: ["Daniel Perez"],
+      files: ["lib", "mix.exs", "README.md"],
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/tuvistavie/pushex",
