@@ -1,7 +1,7 @@
 defmodule Pushex.Mixfile do
   use Mix.Project
 
-  @version "0.0.2"
+  @version "0.0.3"
 
   def project do
     [app: :pushex,
@@ -14,6 +14,7 @@ defmodule Pushex.Mixfile do
      start_permanent: Mix.env == :prod,
      package: package,
      deps: deps,
+     dialyzer: [plt_add_apps: [:poison, :httpoison, :vex]],
      docs: [source_ref: "#{@version}", extras: ["README.md"], main: "readme"]]
   end
 
@@ -30,6 +31,7 @@ defmodule Pushex.Mixfile do
     [{:httpoison, "~> 0.8"},
      {:poison,    "~> 1.5 or ~> 2.1"},
      {:vex,       github: "tuvistavie/vex", branch: "add-type-validator"},
+     {:dialyxir, "~> 0.3", only: :dev},
      {:earmark,   "~> 0.1", only: :dev},
      {:ex_doc,    "~> 0.11", only: :dev}]
   end

@@ -14,6 +14,7 @@ defmodule Pushex.Sandbox do
   Records the notification. This is used by `Pushex.ResponseHandler.Sandbox` to record
   requests and responses.
   """
+  @spec record_notification(Pushex.GCM.response, Pushex.GCM.request, {pid, reference}) :: :ok
   def record_notification(response, request, info) do
     GenServer.call(__MODULE__, {:record_notification, response, request, info})
   end
@@ -21,6 +22,7 @@ defmodule Pushex.Sandbox do
   @doc """
   Wait until a notification arrives.
   """
+  @spec wait_notifications([pid: pid, timeout: non_neg_integer, count: non_neg_integer]) :: [{Pushex.GCM.response, Pushex.GCM.request, {pid, reference}}]
   def wait_notifications(opts \\ []) do
     pid     = opts[:pid] || self()
     timeout = opts[:timeout] || 100
@@ -38,6 +40,7 @@ defmodule Pushex.Sandbox do
   @doc """
   List recorded notifications keeping their order of arrival.
   """
+  @spec list_notifications([pid: pid]) :: [{Pushex.GCM.response, Pushex.GCM.request, {pid, reference}}]
   def list_notifications(opts \\ []) do
     pid = opts[:pid] || self()
     GenServer.call(__MODULE__, {:list_notifications, pid})
@@ -46,6 +49,7 @@ defmodule Pushex.Sandbox do
   @doc """
   Clear all the recorded notifications.
   """
+  @spec clear_notifications([pid: pid]) :: :ok
   def clear_notifications(opts \\ []) do
     pid = opts[:pid] || self()
     GenServer.call(__MODULE__, {:clear_notifications, pid})

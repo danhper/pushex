@@ -1,4 +1,5 @@
-# Pushex [![Build Status](https://travis-ci.org/tuvistavie/pushex.svg?branch=master)](https://travis-ci.org/tuvistavie/pushex)
+# Pushex
+[![Build Status](https://travis-ci.org/tuvistavie/pushex.svg?branch=master)](https://travis-ci.org/tuvistavie/pushex)
 
 Pushex is a library to easily send mobile push notifications with Elixir.
 

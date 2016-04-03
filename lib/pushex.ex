@@ -33,7 +33,7 @@ defmodule Pushex do
   end
 
   defp supervise_if_startable(mod, args, f) do
-    Code.ensure_loaded(mod)
+    _ = Code.ensure_loaded(mod)
     if function_exported?(mod, :start_link, length(args)) do
       [f.(mod, args)]
     else

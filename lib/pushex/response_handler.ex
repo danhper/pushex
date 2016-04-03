@@ -15,8 +15,8 @@ defmodule Pushex.ResponseHandler do
   """
 
   @callback handle_response(
-    response :: {:ok, Pushex.GCM.Response} | {:error, Pushex.GCM.HTTPError},
-    request  :: Pushex.GCM.Request,
+    response :: Pushex.GCM.response,
+    request  :: Pushex.GCM.request,
     info     :: {pid, reference}) :: :ok
 
   def handle_response(response, request, info) do
