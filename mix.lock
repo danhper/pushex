@@ -8,4 +8,4 @@
   "mimerl": {:hex, :mimerl, "1.0.2"},
   "poison": {:hex, :poison, "2.1.0"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.0"},
-  "vex": {:git, "https://github.com/tuvistavie/vex.git", "b1654ffd6d59f3b0b70e32f6b254dbe35e9917a0", [branch: "add-type-validator"]}}
+  "vex": {:git, "https://github.com/tuvistavie/vex.git", "d1b98ad8a9532512bd436469abbdc80a7f076e9f", [branch: "add-type-validator"]}}
