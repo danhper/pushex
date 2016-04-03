@@ -105,8 +105,9 @@ defmodule MyAppManager do
   @behaviour Pushex.AppManager
 
   def find_app(:gcm, name) do
-    app = Repo.find_by(platform: gcm, name: name)
-    %Pushex.GCM.App{name: name, auth_key: app.auth_key}
+    if app = Repo.get_by(App, platform: "gcm", name: name) do
+      %Pushex.GCM.App{name: name, auth_key: app.auth_key}
+    end
   end
 end
 ```
