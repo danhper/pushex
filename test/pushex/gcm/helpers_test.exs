@@ -1,5 +1,5 @@
 defmodule Pushex.GCM.HelpersTest do
-  use ExUnit.Case
+  use Pushex.Case
 
   alias Pushex.GCM.Helpers
   alias Pushex.GCM.Request
@@ -40,6 +40,13 @@ defmodule Pushex.GCM.HelpersTest do
   test "send_notification raises when app do not exist" do
     assert_raise Pushex.AppNotFoundError, fn ->
       Helpers.send_notification(%{}, to: "whoever", with_app: "don't exist!")
+    end
+  end
+
+  test "send_notification raises when not default_app set and app not passed" do
+    Application.put_env(:pushex, :gcm, [])
+    assert_raise ArgumentError, fn ->
+      Helpers.send_notification(%{}, to: "whoever", using: :gcm)
     end
   end
 end

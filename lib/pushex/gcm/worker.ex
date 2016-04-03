@@ -20,12 +20,6 @@ defmodule Pushex.GCM.Worker do
   end
 
   @doc false
-  def handle_call({:send, info, request}, _from, state) do
-    do_send_notification(info, request)
-    {:reply, :ok, state}
-  end
-
-  @doc false
   def handle_cast({:send, info, request}, state) do
     do_send_notification(info, request)
     {:noreply, state}

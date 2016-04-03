@@ -20,6 +20,13 @@ defmodule Pushex.HelpersTest do
     assert [{_, _, {_, ^ref}}] = Pushex.Sandbox.list_notifications
   end
 
+  test "allows to pass list to :to" do
+    ref = Helpers.send_notification(%{}, to: ["whoever"], using: "gcm", with_app: "default_app")
+    assert_receive {{:ok, res}, req, ^ref}
+    assert match?(%GCM.Response{}, res)
+    assert [{_, _, {_, ^ref}}] = Pushex.Sandbox.list_notifications
+  end
+
   test "send_notification delegates to GCM when passing a GCM request" do
     ref = Helpers.send_notification(%GCM.Request{})
     assert_receive {{:ok, res}, _, ^ref}

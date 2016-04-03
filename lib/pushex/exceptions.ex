@@ -11,7 +11,7 @@ defmodule Pushex.ValidationError do
   end
 
   defp format_error({:error, field, validator, error}) do
-    "error on :#{field} with :#{validator} validator: #{error}"
+    "error on #{inspect(field)} with #{inspect(validator)} validator: #{error}"
   end
 end
 
