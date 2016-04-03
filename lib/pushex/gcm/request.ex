@@ -37,9 +37,6 @@ defmodule Pushex.GCM.Request do
     notification: map
   }
 
-  @notification_valid_keys ~w(title body icon sound badge tag color click_action body_loc_key
-                              body_loc_args title_loc_key title_loc_args)a
-
   validates :app,
     presence: true,
     type: [is: Pushex.GCM.App]
@@ -65,8 +62,8 @@ defmodule Pushex.GCM.Request do
   validates :data,
     type: [is: [:map, :nil]]
   validates :notification,
-    type: [is: [:map, :nil]],
-    by: &__MODULE__.validate_notification/1
+    type: [is: [:map, :nil]]
+    # by: &__MODULE__.validate_notification/1
 
 
   def validate(notification) do
@@ -87,15 +84,6 @@ defmodule Pushex.GCM.Request do
   end
   def create(params) when is_list(params) do
     Enum.into(params, %{}) |> create
-  end
-
-  @doc false
-  def validate_notification(nil), do: :ok
-  def validate_notification(notification) when is_map(notification) do
-    extra_keys = Map.keys(notification) -- @notification_valid_keys
-    if Enum.empty?(extra_keys),
-      do: :ok,
-      else: {:error, "got unknown keys #{inspect(extra_keys)} for notification"}
   end
 end
 

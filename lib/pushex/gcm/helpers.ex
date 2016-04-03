@@ -1,7 +1,6 @@
 defmodule Pushex.GCM.Helpers do
   @moduledoc false
 
-  @default_app Application.get_env(:pushex, :gcm)[:default_app]
 
   @doc """
   Sends a notification to GCM asynchrnously.
@@ -15,7 +14,7 @@ defmodule Pushex.GCM.Helpers do
 
   def send_notification(notification, opts) do
     {app, opts} = Keyword.pop(opts, :with_app)
-    app = fetch_app(app || @default_app)
+    app = fetch_app(app || default_app)
     do_send_notification(notification, app, opts)
   end
 
@@ -47,5 +46,9 @@ defmodule Pushex.GCM.Helpers do
     else
       opts
     end
+  end
+
+  defp default_app do
+    Application.get_env(:pushex, :gcm)[:default_app]
   end
 end
