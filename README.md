@@ -42,7 +42,7 @@ The most basic usage, with no configuration looks like this:
 
 ```elixir
 app = %Pushex.GCM.App{name: "a_unique_name_you_like", auth_key: "a GCM API auth key"}
-Pushex.send_notification(%{title: "my_title", body: "my_body"}, to: "registration_id" with_app: app)
+Pushex.send_notification(%{title: "my_title", body: "my_body"}, to: "registration_id", with_app: app)
 ```
 
 To avoid having to create or retreive your app each time, you can configure as many apps
