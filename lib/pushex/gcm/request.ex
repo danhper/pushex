@@ -28,7 +28,7 @@ defmodule Pushex.GCM.Request do
     registration_ids: [String.t],
     to: String.t,
     collapse_key: String.t,
-    priority: atom,
+    priority: String.t,
     content_available: boolean,
     delay_while_idle: boolean,
     time_to_live: non_neg_integer,
@@ -49,7 +49,7 @@ defmodule Pushex.GCM.Request do
   validates :collapse_key,
     type: [is: [:binary, :nil]]
   validates :priority,
-    type: [is: [:atom, :nil]],
+    type: [is: [:string, :nil]],
     inclusion: [in: ~w(high normal), allow_nil: true]
   validates :content_available,
     type: [is: [:boolean, :nil]]
