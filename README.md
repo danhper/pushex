@@ -13,6 +13,7 @@ The main goals are the following:
   * Common API for iOS and Android
   * Multiple applications handling
   * Proper error and response handling
+  * Easy to test
 
 ### Status
 
@@ -35,6 +36,8 @@ Add the following to your dependencies mix.ex.
 The first one is temporary the time we get on an agreement on
 
 https://github.com/CargoSense/vex/pull/24
+
+Then, add `:pushex` to your applications.
 
 
 ## Usage
