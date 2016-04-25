@@ -11,16 +11,13 @@ defmodule Pushex do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    Pushex.Config.make_defaults
-
     config = Application.get_all_env(:pushex)
 
-    app_manager = config[:app_manager_impl]
-    apps = Pushex.Utils.load_apps_from_config
-
     children = [
-      worker(Pushex.GCM.Worker, [])
-    ] ++ supervise_if_startable(app_manager, [apps], &worker/2)
+      worker(Pushex.Config, [config]),
+      worker(Pushex.GCM.Worker, []),
+      worker(Pushex.AppManager.Memory, [])
+    ]
 
     children = children ++ (if config[:sandbox] do
       [worker(Pushex.Sandbox, [])]
@@ -30,15 +27,6 @@ defmodule Pushex do
 
     opts = [strategy: :one_for_one, name: Pushex.Supervisor]
     Supervisor.start_link(children, opts)
-  end
-
-  defp supervise_if_startable(mod, args, f) do
-    _ = Code.ensure_loaded(mod)
-    if function_exported?(mod, :start_link, length(args)) do
-      [f.(mod, args)]
-    else
-      []
-    end
   end
 
   defdelegate send_notification(notification), to: Pushex.Helpers

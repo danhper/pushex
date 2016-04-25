@@ -17,4 +17,15 @@ defmodule Pushex.GCM.App do
   validates :auth_key,
     presence: true,
     type: [is: :string]
+
+  def create(app) do
+    app = struct(Pushex.GCM.App, app)
+    Vex.validate(app)
+  end
+  def create!(app) do
+    case create(app) do
+      {:ok, app} -> app
+      {:error, errors} -> raise Pushex.ValidationError, errors: errors
+    end
+  end
 end

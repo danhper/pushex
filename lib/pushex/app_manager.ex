@@ -23,5 +23,5 @@ defmodule Pushex.AppManager do
     impl.find_app(platform, name)
   end
 
-  defp impl, do: Application.get_env(:pushex, :app_manager_impl)
+  defp impl, do: Pushex.Config.get(:app_manager_impl)
 end

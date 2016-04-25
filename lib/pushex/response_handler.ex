@@ -23,5 +23,5 @@ defmodule Pushex.ResponseHandler do
     Enum.each(response_handlers, &(&1.handle_response(response, request, info)))
   end
 
-  defp response_handlers, do: Application.get_env(:pushex, :response_handlers)
+  defp response_handlers, do: Pushex.Config.get(:response_handlers)
 end

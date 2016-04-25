@@ -8,8 +8,19 @@ defmodule Pushex.AppManager.Memory do
 
   @valid_platforms ~w(gcm apns)a
 
+  def start(apps \\ []) do
+    GenServer.start(__MODULE__, apps, name: __MODULE__)
+  end
+
   def start_link(apps \\ []) do
     GenServer.start_link(__MODULE__, apps, name: __MODULE__)
+  end
+
+  def init([]) do
+    {:ok, Pushex.Config.get(:apps, [])}
+  end
+  def init(apps) do
+    {:ok, apps}
   end
 
   def find_app(platform, name) when platform in unquote(@valid_platforms) do

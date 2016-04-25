@@ -34,7 +34,7 @@ defmodule Pushex.GCM.HelpersTest do
     req = receive do
       {_, request, ^ref} -> request
     end
-    assert req.app.name == Application.get_env(:pushex, :gcm)[:default_app]
+    assert req.app.name == Pushex.Config.get(:gcm)[:default_app]
   end
 
   test "send_notification raises when app do not exist" do
@@ -44,7 +44,7 @@ defmodule Pushex.GCM.HelpersTest do
   end
 
   test "send_notification raises when not default_app set and app not passed" do
-    Application.put_env(:pushex, :gcm, [])
+    Pushex.Config.set(:gcm, [])
     assert_raise ArgumentError, fn ->
       Helpers.send_notification(%{}, to: "whoever", using: :gcm)
     end
