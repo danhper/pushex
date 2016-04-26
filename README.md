@@ -30,14 +30,9 @@ The API is currently subject to breaking changes.
 
 Add the following to your dependencies mix.ex.
 
+```elixir
+[{:pushex, "~> 0.0.5"}]
 ```
-[{:vex, github: "tuvistavie/vex", branch: "add-type-validator"},
- {:pushex, "~> 0.0.1"}]
-```
-
-The first one is temporary the time we get on an agreement on
-
-https://github.com/CargoSense/vex/pull/24
 
 Then, add `:pushex` to your applications.
 

@@ -67,7 +67,7 @@ defmodule Pushex.GCM.Request do
 
 
   def validate(notification) do
-    Vex.validate(notification)
+    Pushex.Util.validate(notification)
   end
 
   def create!(params) do

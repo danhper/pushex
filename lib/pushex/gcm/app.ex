@@ -20,7 +20,7 @@ defmodule Pushex.GCM.App do
 
   def create(app) do
     app = struct(Pushex.GCM.App, app)
-    Vex.validate(app)
+    Pushex.Util.validate(app)
   end
   def create!(app) do
     case create(app) do
