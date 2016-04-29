@@ -119,10 +119,10 @@ To handle responses, you can define a module implementing the `Pushex.ResponseHa
 ```elixir
 # config.exs
 config :pushex,
-  response_handlers: [MyResponseHandler]
+  event_handlers: [MyEventHandler]
 
-# my_response_handler.ex
-defmodule MyResponseHandler do
+# my_event_handler.ex
+defmodule MyEventHandler do
   def handle_response(response, request, {pid, ref}) do
     # do whatever you want with the response and request
     # for example, logging or saving in a DB

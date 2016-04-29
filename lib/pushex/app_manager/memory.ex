@@ -17,7 +17,7 @@ defmodule Pushex.AppManager.Memory do
   end
 
   def init([]) do
-    {:ok, Pushex.Config.get(:apps, [])}
+    {:ok, Application.get_env(:pushex, :apps, [])}
   end
   def init(apps) do
     {:ok, apps}

@@ -12,6 +12,7 @@ defmodule Pushex.App do
     children = [
       worker(Pushex.Config, [config]),
       worker(GenEvent, [[name: Pushex.EventManager]]),
+      supervisor(Pushex.Watcher, [Pushex.Config, :event_handlers, []]),
       worker(Pushex.GCM.Worker, []),
       worker(Pushex.AppManager.Memory, [])
     ]
