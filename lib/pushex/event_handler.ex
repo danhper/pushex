@@ -17,13 +17,15 @@ defmodule Pushex.EventHandler do
   defmodule MyPushEventHandler do
     use Pushex.EventHandler
 
-    def handle_event({:response, response, request, {pid, ref}}, state) do
+    def handle_event({:request, request, {pid, ref}}, state) do
       # do whatever you want with the request
       # for example, logging or saving in a DB
+      {:ok, state}
     end
 
     def handle_event({:response, response, request, {pid, ref}}, state) do
       # do whatever you want with the response and request
+      {:ok, state}
     end
   end
   """

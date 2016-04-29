@@ -114,7 +114,8 @@ end
 
 ### Handling responses
 
-To handle responses, you can define a module implementing the `Pushex.ResponseHandler` behaviour.
+To handle responses, you can define a module using `Pushex.EventHandler`
+which uses `GenEvent` to process events.
 
 ```elixir
 # config.exs
@@ -123,9 +124,17 @@ config :pushex,
 
 # my_event_handler.ex
 defmodule MyEventHandler do
-  def handle_response(response, request, {pid, ref}) do
-    # do whatever you want with the response and request
+  use Pushex.EventHandler
+
+  def handle_event({:request, request, {pid, ref}}, state) do
+    # do whatever you want with the request
     # for example, logging or saving in a DB
+    {:ok, state}
+  end
+
+  def handle_event({:response, response, request, {pid, ref}}, state) do
+    # do whatever you want with the response and request
+    {:ok, state}
   end
 end
 ```
@@ -162,7 +171,7 @@ if you call it from another process, you need to explicitly pass the pid with th
 
 Also note that `Pushex.send_notification` is asynchronous, so if you
 remove the `assert_receive`, you will have a race condition.
-To avoid this, you can use `Pushex.wait_notifications/1` instead of `Pushex.list_notifications`.
+To avoid this, you can use `Pushex.Sandbox.wait_notifications/1` instead of `Pushex.Sandbox.list_notifications`.
 It will wait (by default for `100ms`) until at least `:count` notifications arrive
 
 ```elixir
