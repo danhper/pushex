@@ -1,8 +1,8 @@
-defmodule Pushex.ResponseHandler do
+defmodule Pushex.EventManager do
   @moduledoc """
-  This module defines the behaviour to handle notification responses.
+  This module defines the behaviour to handle events when sending notification.
 
-  It can be used to log the responses or save them in a database for example.
+  Events can be implemented to log the responses or save them in a database for example.
 
   ## Examples
 
@@ -19,9 +19,12 @@ defmodule Pushex.ResponseHandler do
     request  :: Pushex.GCM.request,
     info     :: {pid, reference}) :: :ok
 
-  def handle_response(response, request, info) do
-    Enum.each(response_handlers, &(&1.handle_response(response, request, info)))
+
+  def handle_request(request, info) do
+    GenEvent.notify(__MODULE__, {:request, request, info})
   end
 
-  defp response_handlers, do: Pushex.Config.get(:response_handlers)
+  def handle_response(response, request, info) do
+    GenEvent.notify(__MODULE__, {:response, request, response, info})
+  end
 end
