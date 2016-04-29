@@ -2,9 +2,9 @@ defmodule Pushex.Case do
   use ExUnit.CaseTemplate
 
   setup do
-    config = Pushex.Config.get_all
+    config = Application.get_all_env(:pushex)
     on_exit fn ->
-      Enum.each(config, fn {k, v} -> Pushex.Config.set(k, v) end)
+      Pushex.Config.configure(config)
     end
   end
 end

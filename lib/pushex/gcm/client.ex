@@ -12,5 +12,5 @@ defmodule Pushex.GCM.Client do
     impl.send_notification(notification)
   end
 
-  defp impl, do: Pushex.Config.get(:gcm)[:client_impl]
+  defp impl, do: Application.get_env(:pushex, :gcm)[:client_impl]
 end

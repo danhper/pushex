@@ -49,6 +49,6 @@ defmodule Pushex.GCM.Helpers do
   end
 
   defp default_app do
-    Pushex.Config.get(:gcm)[:default_app]
+    Application.get_env(:pushex, :gcm)[:default_app]
   end
 end

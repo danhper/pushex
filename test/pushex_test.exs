@@ -10,4 +10,13 @@ defmodule PushexTest do
     ref = Pushex.send_notification(%{body: "foo"}, to: "whoever", using: :gcm)
     assert [{_, _, {_, ^ref}}] = Pushex.Sandbox.wait_notifications
   end
+
+  test "add_event_handler adds a new handler" do
+    defmodule NoopHandler do
+      use Pushex.EventHandler
+    end
+    refute List.keyfind(Pushex.Config.event_handlers, NoopHandler, 1)
+    Pushex.add_event_handler(NoopHandler)
+    assert List.keyfind(Pushex.Config.event_handlers, NoopHandler, 1)
+  end
 end

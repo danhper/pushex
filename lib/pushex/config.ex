@@ -5,36 +5,37 @@ defmodule Pushex.Config do
 
   @default_gcm_endpoint "https://android.googleapis.com/gcm"
 
-  def start_link(config) do
-    GenServer.start_link(__MODULE__, config, name: __MODULE__)
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def init(config) do
-    {:ok, make_defaults(config)}
+  def init(opts) do
+    opts |> make_defaults() |> do_configure()
+    {:ok, []}
   end
 
-  def get(key, default \\ nil) do
-    GenServer.call(__MODULE__, {:get, key, default})
+  def event_handlers do
+    for handler <- Application.get_env(:pushex, :event_handlers, []) do
+      {Pushex.EventManager, handler, []}
+    end
   end
 
-  def get_all do
-    GenServer.call(__MODULE__, :get_all)
+  def configure(options) do
+    GenServer.call(__MODULE__, {:configure, options})
   end
 
-  def set(key, value) do
-    GenServer.call(__MODULE__, {:set, key, value})
+  def add_event_handler(handler) do
+    GenServer.call(__MODULE__, {:add_event_handler, handler})
   end
 
-  def handle_call({:get, key, default}, _from, config) do
-    {:reply, Keyword.get(config, key, default), config}
+  def handle_call({:configure, options}, _from, state) do
+    do_configure(options)
+    {:reply, :ok, state}
   end
 
-  def handle_call(:get_all, _from, config) do
-    {:reply, config, config}
-  end
-
-  def handle_call({:set, key, value}, _from, config) do
-    {:reply, :ok, Keyword.put(config, key, value)}
+  def handle_call({:add_event_handler, handler}, _from, state) do
+    update_event_handlers(&[handler|List.delete(&1, handler)])
+    {:reply, :ok, state}
   end
 
   def make_defaults(base_config) do
@@ -55,7 +56,7 @@ defmodule Pushex.Config do
     |> Keyword.put(:gcm, gcm_config)
     |> load_gcm_apps()
     |> Keyword.put_new(:app_manager_impl, Pushex.AppManager.Memory)
-    |> Keyword.put_new(:response_handlers, [])
+    |> Keyword.put_new(:event_handlers, [])
   end
 
   defp make_normal_settings(config) do
@@ -66,11 +67,11 @@ defmodule Pushex.Config do
   end
 
   defp make_sandbox_defaults(config) do
-    base_handlers = Keyword.get(config, :response_handlers, [])
-    response_handlers = if Enum.find(base_handlers, &(&1 == Pushex.ResponseHandler.Sandbox)) do
+    base_handlers = Keyword.get(config, :event_handlers, [])
+    event_handlers = if Enum.find(base_handlers, &(&1 == Pushex.EventHandler.Sandbox)) do
       base_handlers
     else
-      base_handlers ++ [Pushex.ResponseHandler.Sandbox]
+      base_handlers ++ [Pushex.EventHandler.Sandbox]
     end
     gcm_config =
       Keyword.get(config, :gcm, [])
@@ -78,7 +79,7 @@ defmodule Pushex.Config do
 
     config
     |> Keyword.put(:gcm, gcm_config)
-    |> Keyword.put(:response_handlers, response_handlers)
+    |> Keyword.put(:event_handlers, event_handlers)
   end
 
   defp load_gcm_apps(config) do
@@ -89,5 +90,16 @@ defmodule Pushex.Config do
       |> Enum.map(fn {k, v} -> {k, List.first(v)} end)
       |> Enum.into(%{})
     Keyword.put(config, :apps, [gcm: gcm_apps])
+  end
+
+  defp update_event_handlers(fun) do
+    event_handlers = fun.(Application.get_env(:pushex, :event_handlers, []))
+    Application.put_env(:pushex, :event_handlers, event_handlers)
+  end
+
+  defp do_configure(options) do
+    Enum.each options, fn {key, value} ->
+      Application.put_env(:pushex, key, value)
+    end
   end
 end

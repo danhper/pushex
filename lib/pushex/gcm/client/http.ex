@@ -45,6 +45,6 @@ defmodule Pushex.GCM.Client.HTTP do
   end
 
   defp endpoint do
-    Pushex.Config.get(:gcm)[:endpoint]
+    Application.get_env(:pushex, :gcm)[:endpoint]
   end
 end

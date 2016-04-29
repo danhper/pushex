@@ -25,8 +25,9 @@ defmodule Pushex.GCM.Worker do
     {:noreply, state}
   end
 
-  defp do_send_notification({pid, ref}, request) do
+  defp do_send_notification({pid, ref} = info, request) do
+    Pushex.EventManager.handle_request(request, info)
     Pushex.GCM.Client.send_notification(request)
-    |> Pushex.ResponseHandler.handle_response(request, {pid, ref})
+    |> Pushex.EventManager.handle_response(request, info)
   end
 end
