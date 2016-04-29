@@ -28,6 +28,10 @@ defmodule Pushex.Watcher do
     end
   end
 
+  def unwatch(mod, handler) do
+    GenEvent.remove_handler(mod, handler, [])
+  end
+
   def watcher(mod, handler, args) do
     GenServer.start_link(__MODULE__, {mod, handler, args})
   end
