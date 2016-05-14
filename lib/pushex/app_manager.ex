@@ -17,7 +17,12 @@ defmodule Pushex.AppManager do
       end
   """
 
+  @callback find_all(platform :: atom) :: [Pushex.GCM.App]
   @callback find_app(platform :: atom, name :: String.t) :: Pushex.GCM.App
+
+  def find_all(platform) do
+    impl.find_all(platform)
+  end
 
   def find_app(platform, name) do
     impl.find_app(platform, name)

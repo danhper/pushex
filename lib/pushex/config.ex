@@ -63,7 +63,12 @@ defmodule Pushex.Config do
     gcm_config =
       Keyword.get(config, :gcm, [])
       |> Keyword.put_new(:client_impl, Pushex.GCM.Client.HTTP)
-    config |> Keyword.put(:gcm, gcm_config)
+    apns_config = config
+      |> Keyword.get(:gcm, [])
+      |> Keyword.put_new(:client_impl, Pushex.APNS.Client.SSL)
+    config
+    |> Keyword.put(:gcm, gcm_config)
+    |> Keyword.put(:apns, apns_config)
   end
 
   defp make_sandbox_defaults(config) do

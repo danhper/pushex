@@ -7,6 +7,12 @@ defmodule Pushex.App do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
+    # temporary workaround
+    unless Application.get_env(:apns, :pools) do
+      Application.put_env(:apns, :pools, [])
+    end
+    Application.ensure_all_started(:apns)
+
     config = Application.get_all_env(:pushex)
 
     children = [
