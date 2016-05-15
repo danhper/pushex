@@ -1,15 +1,18 @@
 defmodule Pushex.WorkerTest do
   use Pushex.Case
 
-  alias Pushex.Worker
-  alias Pushex.GCM
-
   test "send_notification returns a reference" do
-    assert is_reference(Worker.send_notification(%GCM.Request{}))
+    assert is_reference(Pushex.Worker.send_notification(%Pushex.GCM.Request{}))
+    assert is_reference(Pushex.Worker.send_notification(%Pushex.APNS.Request{}))
   end
 
-  test "send_notification calls handle_response" do
-    ref = Worker.send_notification(%GCM.Request{})
+  test "send_notification with gcm calls handle_response" do
+    ref = Pushex.Worker.send_notification(%Pushex.GCM.Request{})
+    assert_receive {_, _, ^ref}
+  end
+
+  test "send_notification with apns calls handle_response" do
+    ref = Pushex.Worker.send_notification(%Pushex.APNS.Request{})
     assert_receive {_, _, ^ref}
   end
 end

@@ -25,6 +25,7 @@ defmodule Pushex.Validators.TypeTest do
       {self,     :pid},
       {make_ref, :reference},
       {port,     :port},
+      {["foo"],  [:binary, [list: :binary]]},
       {1,        [:binary, :integer]},
       {nil,      [nil, :integer]},
       {"a",      [:binary, :atom]},

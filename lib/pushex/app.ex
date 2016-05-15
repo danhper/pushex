@@ -9,6 +9,7 @@ defmodule Pushex.App do
 
     unless Application.get_env(:apns, :pools) do
       Application.put_env(:apns, :pools, [])
+      Application.put_env(:apns, :callback_module, Pushex.APNS.Callback)
     end
     Application.ensure_all_started(:apns)
 
@@ -30,7 +31,8 @@ defmodule Pushex.App do
       supervisor(Pushex.Watcher, [Pushex.Config, :event_handlers, []]),
       :poolboy.child_spec(Pushex.GCM, gcm_pool_options, [client: Pushex.GCM.Client]),
       :poolboy.child_spec(Pushex.APNS, apns_pool_options, [client: Pushex.APNS.Client]),
-      worker(Pushex.AppManager.Memory, [])
+      worker(Pushex.AppManager.Memory, []),
+      worker(Pushex.APNS.SSLPoolManager, [])
     ]
 
     children = children ++ (if config[:sandbox] do

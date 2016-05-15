@@ -34,10 +34,23 @@ defmodule Pushex.HelpersTest do
     assert [{_, _, {_, ^ref}}] = Pushex.Sandbox.wait_notifications
   end
 
+  test "send_notification delegates to APNS when passing an APNS request" do
+    ref = Helpers.send_notification(%Pushex.APNS.Request{})
+    assert_receive {{:ok, res}, _, ^ref}
+    assert match?(%Pushex.APNS.Response{}, res)
+    assert [{_, _, {_, ^ref}}] = Pushex.Sandbox.wait_notifications
+  end
+
   test "send_notification delegates to GCM when :with_app is a GCM app" do
     ref = Helpers.send_notification(%{}, to: "whoever", with_app: %GCM.App{})
     assert [{{:ok, res} , _, {_, ^ref}}] = Pushex.Sandbox.wait_notifications
     assert match?(%GCM.Response{}, res)
+  end
+
+  test "send_notification delegates to APNS when :with_app is a APNS app" do
+    ref = Helpers.send_notification(%{}, to: "whoever", with_app: %Pushex.APNS.App{})
+    assert [{{:ok, res} , _, {_, ^ref}}] = Pushex.Sandbox.wait_notifications
+    assert match?(%Pushex.APNS.Response{}, res)
   end
 
   test "send_notification sends multiple notifications" do
@@ -52,6 +65,16 @@ defmodule Pushex.HelpersTest do
 
   test "send_notification raises when neither with_app nor :using is passed" do
     assert_raise ArgumentError, fn -> Helpers.send_notification(%{}) end
+  end
+
+  test "send_notification raises when :using is passed without a default app" do
+    assert_raise ArgumentError, fn -> Helpers.send_notification(%{}, using: :apns) end
+  end
+
+  test "send_notification raises when app does not exist" do
+    assert_raise Pushex.AppNotFoundError, fn ->
+      Helpers.send_notification(%{}, with_app: "foo", using: :apns)
+    end
   end
 
   test "send_notification raises when :with_app is binary and :using is not passed" do

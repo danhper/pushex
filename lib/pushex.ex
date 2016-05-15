@@ -5,8 +5,8 @@ defmodule Pushex do
   See Pushex.Helpers documentation for more information.
   """
 
-  defdelegate send_notification(notification), to: Pushex.Helpers
-  defdelegate send_notification(notification, opts), to: Pushex.Helpers
+  defdelegate push(notification), to: Pushex.Helpers, as: :send_notification
+  defdelegate push(notification, opts), to: Pushex.Helpers, as: :send_notification
 
   def add_event_handler(handler) do
     case Pushex.Watcher.watch(Pushex.EventManager, handler, []) do

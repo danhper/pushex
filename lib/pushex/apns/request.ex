@@ -16,9 +16,9 @@ defmodule Pushex.APNS.Request do
     notification: map
   }
 
-  validates :app, presence: true, type: [is: Pushex.APNS.App]
-  validates :notification, type: [is: [:map, :nil]]
-  validates :to, type: [is: [:binary, list: :binary]], presence: true
+  validates :app, type: [is: Pushex.APNS.App]
+  validates :notification, type: [is: :map]
+  validates :to, type: [is: [:binary, [list: :binary]]]
 
   def create!(notification, app, opts) do
     params = %{notification: notification, app: app, to: opts[:to]}

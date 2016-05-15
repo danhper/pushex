@@ -31,11 +31,11 @@ defmodule Pushex.Helpers do
   """
   @spec send_notification(Pushex.GCM.request | Pushex.APNS.request | map, Keyword.t) :: reference
   def send_notification(request, opts \\ [])
-  def send_notification(%Pushex.GCM.Request{} = request, opts) do
-    Pushex.Worker.send_notification(request, opts)
+  def send_notification(%Pushex.GCM.Request{} = request, _opts) do
+    Pushex.Worker.send_notification(request)
   end
-  def send_notification(%Pushex.APNS.Request{} = request, opts) do
-    Pushex.Worker.send_notification(request, opts)
+  def send_notification(%Pushex.APNS.Request{} = request, _opts) do
+    Pushex.Worker.send_notification(request)
   end
   def send_notification(notification, opts) do
     if opts[:using] do
@@ -56,15 +56,17 @@ defmodule Pushex.Helpers do
     {app, opts} = Keyword.pop(opts, :with_app)
     app = fetch_app(platform, app || default_app(platform))
     request = make_request(notification, app, opts)
-    Pushex.Worker.send_notification(request, opts)
+    Pushex.Worker.send_notification(request)
   end
   defp do_send_notification(_notification, platform, _opts) do
     raise ArgumentError, "#{inspect(platform)} is not a valid platform"
   end
 
-  defp fetch_app(_platform, nil) do
-    raise ArgumentError, "you need to define a default app for GCM in your config or \
-    to pass one explicitly with the :with_app parameter"
+  defp fetch_app(platform, nil) do
+    raise ArgumentError, """
+    you need to define a default app for the #{platform} in your config
+    or to pass one explicitly with the :with_app parameter
+    """
   end
   defp fetch_app(_platform, %Pushex.GCM.App{} = app), do: app
   defp fetch_app(_platform, %Pushex.APNS.App{} = app), do: app

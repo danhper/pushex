@@ -60,7 +60,8 @@ defmodule Pushex.Config do
     config
     |> Keyword.put(:gcm, gcm_config)
     |> Keyword.put(:apns, apns_config)
-    |> load_gcm_apps()
+    |> load_apps(:gcm, Pushex.GCM.App)
+    |> load_apps(:apns, Pushex.APNS.App)
     |> Keyword.put_new(:app_manager_impl, Pushex.AppManager.Memory)
     |> Keyword.put_new(:event_handlers, [])
   end
@@ -70,7 +71,7 @@ defmodule Pushex.Config do
       Keyword.get(config, :gcm, [])
       |> Keyword.put_new(:client_impl, Pushex.GCM.Client.HTTP)
     apns_config = config
-      |> Keyword.get(:gcm, [])
+      |> Keyword.get(:apns, [])
       |> Keyword.put_new(:client_impl, Pushex.APNS.Client.SSL)
     config
     |> Keyword.put(:gcm, gcm_config)
@@ -97,14 +98,14 @@ defmodule Pushex.Config do
     |> Keyword.put(:event_handlers, event_handlers)
   end
 
-  defp load_gcm_apps(config) do
-    gcm_apps =
-      Keyword.get(config[:gcm], :apps, [])
-      |> Enum.map(&Pushex.GCM.App.create!/1)
+  defp load_apps(config, platform, mod) do
+    apps =
+      Keyword.get(config[platform], :apps, [])
+      |> Enum.map(&mod.create!/1)
       |> Enum.group_by(&(&1.name))
       |> Enum.map(fn {k, v} -> {k, List.first(v)} end)
       |> Enum.into(%{})
-    Keyword.put(config, :apps, [gcm: gcm_apps])
+    Keyword.put(config, :apps, [{platform, apps} | Keyword.get(config, :apps, [])])
   end
 
   defp update_event_handlers(fun) do
