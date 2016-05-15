@@ -63,27 +63,31 @@ defmodule Pushex.GCM.Request do
     type: [is: [:map, :nil]]
   validates :notification,
     type: [is: [:map, :nil]]
-    # by: &__MODULE__.validate_notification/1
 
 
-  def validate(notification) do
-    Pushex.Util.validate(notification)
+  def create(params) do
+    Pushex.Util.create_struct(__MODULE__, params)
   end
-
   def create!(params) do
-    case create(params) do
-      {:ok, notification} -> notification
-      {:error, err}       -> raise Pushex.ValidationError, errors: err
+    Pushex.Util.create_struct!(__MODULE__, params)
+  end
+
+  def create!(notification, app, opts) do
+    params = opts
+    |> Keyword.put(:notification, notification)
+    |> Keyword.put(:app, app)
+    |> normalize_opts
+
+    Pushex.Util.create_struct!(__MODULE__, params)
+  end
+
+  defp normalize_opts(opts) do
+    if is_list(opts[:to]) do
+      {to, opts} = Keyword.pop(opts, :to)
+      Keyword.put(opts, :registration_ids, to)
+    else
+      opts
     end
-  end
-  def create(%__MODULE__{} = notification) do
-    validate(notification)
-  end
-  def create(params) when is_map(params) do
-    struct(__MODULE__, params) |> create
-  end
-  def create(params) when is_list(params) do
-    Enum.into(params, %{}) |> create
   end
 end
 

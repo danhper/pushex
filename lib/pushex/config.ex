@@ -51,9 +51,15 @@ defmodule Pushex.Config do
     gcm_config =
       Keyword.get(config, :gcm, [])
       |> Keyword.put_new(:endpoint, @default_gcm_endpoint)
+      |> Keyword.put_new(:pool_options, [size: 100, max_overflow: 20])
+
+    apns_config =
+      Keyword.get(config, :apns, [])
+      |> Keyword.put_new(:pool_options, [size: 100, max_overflow: 20])
 
     config
     |> Keyword.put(:gcm, gcm_config)
+    |> Keyword.put(:apns, apns_config)
     |> load_gcm_apps()
     |> Keyword.put_new(:app_manager_impl, Pushex.AppManager.Memory)
     |> Keyword.put_new(:event_handlers, [])
@@ -81,9 +87,13 @@ defmodule Pushex.Config do
     gcm_config =
       Keyword.get(config, :gcm, [])
       |> Keyword.put_new(:client_impl, Pushex.GCM.Client.Sandbox)
+    apns_config =
+      Keyword.get(config, :apns, [])
+      |> Keyword.put_new(:client_impl, Pushex.APNS.Client.Sandbox)
 
     config
     |> Keyword.put(:gcm, gcm_config)
+    |> Keyword.put(:apns, apns_config)
     |> Keyword.put(:event_handlers, event_handlers)
   end
 

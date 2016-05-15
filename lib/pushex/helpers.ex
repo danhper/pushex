@@ -29,30 +29,63 @@ defmodule Pushex.Helpers do
       request = %Pushex.GCM.Request{app: app, notification: notification, to: reg_id}
       Pushex.send_notification(request)
   """
-  @spec send_notification(Pushex.GCM.Request.t | map, Keyword.t) :: reference
-  def send_notification(notification, opts \\ [])
-  def send_notification(%Pushex.GCM.Request{} = notification, opts) do
-    send_gcm_notification(notification, opts)
+  @spec send_notification(Pushex.GCM.request | Pushex.APNS.request | map, Keyword.t) :: reference
+  def send_notification(request, opts \\ [])
+  def send_notification(%Pushex.GCM.Request{} = request, opts) do
+    Pushex.Worker.send_notification(request, opts)
+  end
+  def send_notification(%Pushex.APNS.Request{} = request, opts) do
+    Pushex.Worker.send_notification(request, opts)
   end
   def send_notification(notification, opts) do
     if opts[:using] do
-      send_notification(notification, opts[:using], opts)
+      do_send_notification(notification, opts[:using], opts)
     else
       case Keyword.get(opts, :with_app) do
-        %Pushex.GCM.App{} -> send_gcm_notification(notification, opts)
-        _                 -> raise ArgumentError, ":with_app must be a Pushex.GCM.App when :using is not passed"
+        %Pushex.GCM.App{}  -> do_send_notification(notification, :gcm, opts)
+        %Pushex.APNS.App{} -> do_send_notification(notification, :apns, opts)
+        _                  -> raise ArgumentError, ":with_app must be a `Pushex.GCM.App` or `Pushex.APNS.App` when :using is not passed"
       end
     end
   end
 
-  defp send_notification(notification, platform, opts) when platform in [:gcm, "gcm"] do
-    send_gcm_notification(notification, opts)
+  defp do_send_notification(notification, platform, opts) when platform in ["gcm", "apns"] do
+    do_send_notification(notification, String.to_atom(platform), opts)
   end
-  defp send_notification(_notification, platform, _opts) do
+  defp do_send_notification(notification, platform, opts) when platform in [:gcm, :apns] do
+    {app, opts} = Keyword.pop(opts, :with_app)
+    app = fetch_app(platform, app || default_app(platform))
+    request = make_request(notification, app, opts)
+    Pushex.Worker.send_notification(request, opts)
+  end
+  defp do_send_notification(_notification, platform, _opts) do
     raise ArgumentError, "#{inspect(platform)} is not a valid platform"
   end
 
-  defdelegate send_gcm_notification(notification, opts),
-    to: Pushex.GCM.Helpers,
-    as: :send_notification
+  defp fetch_app(_platform, nil) do
+    raise ArgumentError, "you need to define a default app for GCM in your config or \
+    to pass one explicitly with the :with_app parameter"
+  end
+  defp fetch_app(_platform, %Pushex.GCM.App{} = app), do: app
+  defp fetch_app(_platform, %Pushex.APNS.App{} = app), do: app
+  defp fetch_app(platform, app_name) when is_binary(app_name) or is_atom(app_name) do
+    case Pushex.AppManager.find_app(platform, app_name) do
+      nil -> raise Pushex.AppNotFoundError, platform: platform, name: app_name
+      app -> app
+    end
+  end
+
+  defp make_request(notification, %Pushex.GCM.App{} = app, opts) do
+    Pushex.GCM.Request.create!(notification, app, opts)
+  end
+  defp make_request(notification, %Pushex.APNS.App{} = app, opts) do
+    Pushex.APNS.Request.create!(notification, app, opts)
+  end
+  defp make_request(_notification, app, _opts) do
+    raise ArgumentError, "application must be Pushex.GCM.App or Pushex.APNS.app, got #{inspect(app)}"
+  end
+
+  defp default_app(platform) do
+    Application.get_env(:pushex, platform)[:default_app]
+  end
 end

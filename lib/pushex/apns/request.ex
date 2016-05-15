@@ -18,7 +18,12 @@ defmodule Pushex.APNS.Request do
 
   validates :app, presence: true, type: [is: Pushex.APNS.App]
   validates :notification, type: [is: [:map, :nil]]
-  validates :to, type: [is: [:binary, :nil, list: :binary]], presence: true
+  validates :to, type: [is: [:binary, list: :binary]], presence: true
+
+  def create!(notification, app, opts) do
+    params = %{notification: notification, app: app, to: opts[:to]}
+    Pushex.Util.create_struct!(__MODULE__, params)
+  end
 
   def to_message(request) do
     message = APNS.Message.new

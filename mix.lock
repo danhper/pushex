@@ -1,4 +1,4 @@
-%{"apns": {:git, "https://github.com/tuvistavie/apns4ex.git", "8e7b4ce3a3b8eac134a00eeaa91ee6f54376f042", []},
+%{"apns": {:git, "https://github.com/tuvistavie/apns4ex.git", "2f8701536ee59f722d711e6c89f94cf490fc9666", [branch: "dev"]},
   "certifi": {:hex, :certifi, "0.4.0"},
   "connection": {:hex, :connection, "1.0.2"},
   "dialyxir": {:hex, :dialyxir, "0.3.3"},
