@@ -31,7 +31,9 @@ defmodule Pushex.Mixfile do
   defp deps do
     [{:httpoison, "~> 0.8"},
      {:poison,    "~> 1.5 or ~> 2.1"},
+     {:poolboy,   "~> 1.5"},
      {:vex,       "~> 0.5"},
+     {:apns,      github: "tuvistavie/apns4ex", branch: "dev"},
      {:excoveralls, "~> 0.4", only: :test},
      {:dialyxir, "~> 0.3", only: :dev},
      {:earmark,   "~> 0.1", only: :dev},

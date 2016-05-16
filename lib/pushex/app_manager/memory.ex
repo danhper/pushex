@@ -23,6 +23,10 @@ defmodule Pushex.AppManager.Memory do
     {:ok, apps}
   end
 
+  def find_all(platform) when platform in unquote(@valid_platforms) do
+    GenServer.call(__MODULE__, {:find_all, platform})
+  end
+
   def find_app(platform, name) when platform in unquote(@valid_platforms) do
     GenServer.call(__MODULE__, {:find, platform, name})
   end
@@ -30,5 +34,9 @@ defmodule Pushex.AppManager.Memory do
   def handle_call({:find, platform, name}, _from, apps) do
     app = Map.get(apps[platform], name)
     {:reply, app, apps}
+  end
+
+  def handle_call({:find_all, platform}, _from, apps) do
+    {:reply, Map.values(apps[platform]), apps}
   end
 end

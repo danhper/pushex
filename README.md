@@ -15,23 +15,21 @@ The main goals are the following:
   * Common API for iOS and Android
   * Multiple applications handling
   * Proper error and response handling
-  * Easy to test
+  * Testabe using a sanbox mode
 
 ### Status
 
-The library is currently under heavy development.
+Both GCM and APNS are working. APNS delegates to [apns4ex](https://github.com/chvanikoff/apns4ex)
+for now, I will probably use the HTTP2 API in a later version.
 
-The GCM part is already usable, I will be implementing the APNS part
-once the API get a bit more stable.
-
-The API is currently subject to breaking changes.
+The API is still subject to change, with a minor version bump for each change.
 
 ## Installation
 
 Add the following to your dependencies mix.ex.
 
 ```elixir
-[{:pushex, "~> 0.0.5"}]
+[{:pushex, "~> 0.1.0"}]
 ```
 
 Then, add `:pushex` to your applications.
@@ -43,7 +41,7 @@ The most basic usage, with no configuration looks like this:
 
 ```elixir
 app = %Pushex.GCM.App{name: "a_unique_name_you_like", auth_key: "a GCM API auth key"}
-Pushex.send_notification(%{title: "my_title", body: "my_body"}, to: "registration_id", with_app: app)
+Pushex.push(%{title: "my_title", body: "my_body"}, to: "registration_id", with_app: app)
 ```
 
 To avoid having to create or retreive your app each time, you can configure as many apps
@@ -57,6 +55,12 @@ config :pushex,
       [name: "first_app", auth_key: "a key"],
       [name: "other_app", auth_key: "another key"]
     ]
+  ],
+  gcm: [
+    default_app: "first_app",
+    apps: [
+      [name: "first_app", env: :dev, certfile: "/path/to/certfile", pool_size: 5]
+    ]
   ]
 ```
 
@@ -65,10 +69,10 @@ You can then do the following:
 
 ```elixir
 # this will use the default app, "first_app" with the above configuration
-Pushex.send_notification(%{title: "my_title", body: "my_body"}, to: "registration_id", using: :gcm)
+Pushex.push(%{title: "my_title", body: "my_body"}, to: "registration_id", using: :gcm)
 
 # this will use the other_app
-Pushex.send_notification(%{title: "my_title", body: "my_body"}, to: "registration_id", using: :gcm, with_app: "other_app")
+Pushex.push(%{title: "my_title", body: "my_body"}, to: "registration_id", using: :gcm, with_app: "other_app")
 ```
 
 Note that the function is async and only returns a reference, see the response and error
@@ -77,7 +81,7 @@ handling documentation for more information.
 ### Passing more options
 
 If you need to pass options, `priority` for example, you can just pass
-it in the keyword list and it will be sent to GCM (and APNS when implemented).
+it in the keyword list and it will be sent.
 
 See
 
@@ -87,6 +91,8 @@ for more information.
 
 The parameters from `Table 1` should be passed in the keyword list, while
 the parameters from `Table 2` should be passed in the first argument.
+
+For more information about `APNS` options, see [apns4ex](https://github.com/chvanikoff/apns4ex) docs.
 
 NOTE: if you pass an array to the `to` parameter, if will automatically
 be converted to `registration_ids` when sending the request, to keep a consistent API.
@@ -104,10 +110,18 @@ config :pushex,
 defmodule MyAppManager do
   @behaviour Pushex.AppManager
 
-  def find_app(:gcm, name) do
-    if app = Repo.get_by(App, platform: "gcm", name: name) do
-      %Pushex.GCM.App{name: name, auth_key: app.auth_key}
+  def find_app(platform, name) do
+    if app = Repo.get_by(App, platform: platform, name: name) do
+      make_app(platform, app)
     end
+  end
+
+  # transform to a `Pushex._.App`
+  defp make_app(:gcm, app) do
+    struct(Pushex.GCM.App, Map.from_struct(app))
+  end
+  defp make_app(:apns, app) do
+    struct(Pushex.APNS.App, Map.from_struct(app))
   end
 end
 ```
@@ -139,7 +153,7 @@ defmodule MyEventHandler do
 end
 ```
 
-The `ref` passed here is the one returned when calling `send_notification`.
+The `ref` passed here is the one returned when calling `push`.
 
 ## Testing
 
@@ -159,7 +173,7 @@ Here is a sample test.
 
 ```elixir
 test "send notification to users" do
-  ref = Pushex.send_notification(%{body: "my message"}, to: "my-user", using: :gcm)
+  ref = Pushex.push(%{body: "my message"}, to: "my-user", using: :gcm)
   pid = self()
   assert_receive {{:ok, response}, request, ^ref}
   assert [{{:ok, ^response}, ^request, {^pid, ^ref}}] = Pushex.Sandbox.list_notifications
@@ -169,7 +183,7 @@ end
 Note that `list_notifications` depends on the running process, so
 if you call it from another process, you need to explicitly pass the pid with the `:pid` option.
 
-Also note that `Pushex.send_notification` is asynchronous, so if you
+Also note that `Pushex.push` is asynchronous, so if you
 remove the `assert_receive`, you will have a race condition.
 To avoid this, you can use `Pushex.Sandbox.wait_notifications/1` instead of `Pushex.Sandbox.list_notifications`.
 It will wait (by default for `100ms`) until at least `:count` notifications arrive
@@ -177,7 +191,7 @@ It will wait (by default for `100ms`) until at least `:count` notifications arri
 ```elixir
 test "send notification to users and wait" do
   Enum.each (1..10), fn _ ->
-    Helpers.send_notification(%{body: "foo"}, to: "whoever", using: :gcm)
+    Pushex.push(%{body: "foo"}, to: "whoever", using: :gcm)
   end
   notifications = Pushex.Sandbox.wait_notifications(count: 10, timeout: 50)
   assert length(notifications) == 10
