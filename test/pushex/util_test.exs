@@ -10,5 +10,7 @@ defmodule Pushex.UtilTest do
   test "normalize_notification with platform key" do
     map = %{title: "foo", apns: %{alert: "foobar", title: "other"}}
     assert Util.normalize_notification(map, :apns) == %{alert: "foobar", title: "other"}
+    map = %{"title" => "foo", "apns" => %{"alert" => "foobar", "title" => "other"}}
+    assert Util.normalize_notification(map, :apns) == %{"alert" => "foobar", "title" => "other"}
   end
 end

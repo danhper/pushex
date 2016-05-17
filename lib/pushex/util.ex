@@ -10,7 +10,14 @@ defmodule Pushex.Util do
   end
 
   def normalize_notification(notification, platform) do
-    {platform_data, notification} = Map.pop(notification, platform, %{})
+    {platform_data, notification} = cond do
+      Map.has_key?(notification, platform) ->
+        Map.pop(notification, platform)
+      Map.has_key?(notification, to_string(platform)) ->
+        Map.pop(notification, to_string(platform))
+      true ->
+        {%{}, notification}
+    end
     Map.merge(notification, platform_data)
   end
 
