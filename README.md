@@ -57,7 +57,7 @@ config :pushex,
       [name: "other_app", auth_key: "another key"]
     ]
   ],
-  gcm: [
+  apns: [
     default_app: "first_app",
     apps: [
       [name: "first_app", env: :dev, certfile: "/path/to/certfile", pool_size: 5]
@@ -78,6 +78,29 @@ Pushex.push(%{title: "my_title", body: "my_body"}, to: "registration_id", using:
 
 Note that the function is async and only returns a reference, see the response and error
 handling documentation for more information.
+
+### Sending to multiple platforms
+
+If you want to use the same message for both platforms, you can define messages as follow:
+
+```
+message = %{
+  common: "this will be in both payloads",
+  apns: %{
+    alert: "My alert",
+    badge: 1
+  },
+  gcm: %{
+    title: "GCM title",
+    body: "My body"
+  }
+}
+
+Pushex.push(message, to: ["apns_token1", "apns_token2"], using: :apns)
+Pushex.push(message, to: ["gcm_registration_id1", "gcm_registration_id2"], using: :gcm)
+```
+
+Only `:gcm` and `:apns` are currently available.
 
 ### Passing more options
 

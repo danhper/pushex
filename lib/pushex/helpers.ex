@@ -55,8 +55,11 @@ defmodule Pushex.Helpers do
   defp do_send_notification(notification, platform, opts) when platform in [:gcm, :apns] do
     {app, opts} = Keyword.pop(opts, :with_app)
     app = fetch_app(platform, app || default_app(platform))
-    request = make_request(notification, app, opts)
-    Pushex.Worker.send_notification(request)
+
+    notification
+    |> Pushex.Util.normalize_notification(platform)
+    |> make_request(app, opts)
+    |> Pushex.Worker.send_notification()
   end
   defp do_send_notification(_notification, platform, _opts) do
     raise ArgumentError, "#{inspect(platform)} is not a valid platform"

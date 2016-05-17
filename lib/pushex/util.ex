@@ -9,6 +9,11 @@ defmodule Pushex.Util do
     end
   end
 
+  def normalize_notification(notification, platform) do
+    {platform_data, notification} = Map.pop(notification, platform, %{})
+    Map.merge(notification, platform_data)
+  end
+
   def create_struct!(mod, params) do
     case create_struct(mod, params) do
       {:ok, value}  -> value
