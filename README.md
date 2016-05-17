@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/tuvistavie/pushex/badge.svg?branch=master)](https://coveralls.io/github/tuvistavie/pushex?branch=master)
 
 
-Pushex is a library to easily send mobile push notifications with Elixir.
+Pushex is a library to easily send push notifications with Elixir.
 
 ## About
 
@@ -29,11 +29,12 @@ The API is still subject to change, with a minor version bump for each change.
 Add the following to your dependencies mix.ex.
 
 ```elixir
-[{:pushex, "~> 0.1.0"}]
+[{:pushex, github: "tuvistavie/pushex"}]
 ```
 
 Then, add `:pushex` to your applications.
 
+I will make the next upload to Hex once the forked dependencies get merged and uploaded.
 
 ## Usage
 
