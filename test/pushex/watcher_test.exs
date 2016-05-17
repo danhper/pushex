@@ -31,5 +31,6 @@ defmodule Pushex.WatcherTest do
     assert :ok = Pushex.Watcher.unwatch(Pushex.EventManager, BadHandler)
     GenEvent.notify(Pushex.EventManager, {:response, %Response{}, %Request{}, {self(), ref}})
     refute_receive {:bad_handler, ^ref}
+    refute BadHandler in GenEvent.which_handlers(Pushex.EventManager)
   end
 end

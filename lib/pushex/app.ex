@@ -13,6 +13,8 @@ defmodule Pushex.App do
     end
     Application.ensure_all_started(:apns)
 
+    Application.put_env(:vex, :sources, [Pushex.Validators, Vex.Validators])
+
     config = Pushex.Config.make_defaults(Application.get_all_env(:pushex))
 
     gcm_pool_options = Keyword.merge([
