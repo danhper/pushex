@@ -7,8 +7,4 @@ defmodule Pushex.AppManager.MemoryTest do
     assert AppManager.Memory.find_app(:gcm, "default_app")
     refute AppManager.Memory.find_app(:gcm, "inexisting_app")
   end
-
-  test "find_all returns all apps" do
-    assert [_|_] = AppManager.Memory.find_all(:gcm)
-  end
 end
