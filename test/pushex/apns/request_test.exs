@@ -10,6 +10,11 @@ defmodule Pushex.APNS.RequestTest do
     refute message.category
   end
 
+  test "to_message with string data" do
+    assert %APNS.Message{} = message = Request.to_message(%Request{notification: %{"alert" => "notif"}})
+    assert message.alert == "notif"
+  end
+
   test "create!" do
     assert_raise Pushex.ValidationError, fn ->
       Request.create!(nil, nil, [])

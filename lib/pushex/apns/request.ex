@@ -10,6 +10,9 @@ defmodule Pushex.APNS.Request do
 
   defstruct [:app, :to, :notification]
 
+  @valid_keys ~w(alert badge category content_available expiry extra generated_at id priority
+                 retry_count sound support_old_ios token)
+
   @type t :: %__MODULE__{
     app: Pushex.APNS.App.t,
     to: String.t | [String.t],
@@ -29,7 +32,10 @@ defmodule Pushex.APNS.Request do
     message = APNS.Message.new
     Enum.reduce(request.notification, message, fn
       {_k, v}, msg when is_nil(v) or v == "" -> msg
-      {k, v}, msg -> Map.put(msg, k, v)
+      {k, v}, msg -> Map.put(msg, to_atom(k), v)
     end)
   end
+
+  defp to_atom(value) when value in unquote(@valid_keys), do: String.to_atom(value)
+  defp to_atom(value), do: value
 end
