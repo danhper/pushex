@@ -34,7 +34,7 @@ defmodule Pushex.Mixfile do
      {:poolboy,   "~> 1.5"},
      {:vex,       "~> 0.5"},
      {:apns,      github: "tuvistavie/apns4ex", branch: "dev"},
-     {:excoveralls, "~> 0.4", only: :test},
+     {:excoveralls, "~> 0.5", only: :test},
      {:dialyxir, "~> 0.3", only: :dev},
      {:earmark,   "~> 0.1", only: :dev},
      {:ex_doc,    "~> 0.11", only: :dev}]
