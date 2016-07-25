@@ -40,7 +40,7 @@ defmodule Pushex.EventHandler do
 
   @doc false
   defmacro add_default_handlers(_env) do
-    quote line: -1 do
+    quote do
       def handle_event({:request, _request, _info}, state), do: {:ok, state}
       def handle_event({:response, _response, _request, _info}, state), do: {:ok, state}
       def handle_event({:error, _error, _token}, state), do: {:ok, state}

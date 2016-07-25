@@ -15,14 +15,14 @@ defmodule Pushex.HelpersTest do
 
   test "allows to pass platform as string" do
     ref = Helpers.send_notification(%{}, to: "whoever", using: "gcm", with_app: "default_app")
-    assert_receive {{:ok, res}, req, ^ref}
+    assert_receive {{:ok, res}, _req, ^ref}
     assert match?(%GCM.Response{}, res)
     assert [{_, _, {_, ^ref}}] = Pushex.Sandbox.wait_notifications
   end
 
   test "allows to pass list to :to" do
     ref = Helpers.send_notification(%{}, to: ["whoever"], using: "gcm", with_app: "default_app")
-    assert_receive {{:ok, res}, req, ^ref}
+    assert_receive {{:ok, res}, _req, ^ref}
     assert match?(%GCM.Response{}, res)
     assert [{_, _, {_, ^ref}}] = Pushex.Sandbox.wait_notifications
   end

@@ -21,6 +21,7 @@ defmodule Pushex.Mixfile do
 
   def application do
     [applications: [:logger, :httpoison, :vex, :poolboy],
+     included_applications: [:apns],
      mod: {Pushex.App, []},
      description: 'Mobile push notification library']
   end
@@ -33,7 +34,7 @@ defmodule Pushex.Mixfile do
      {:poison,    "~> 1.5 or ~> 2.1"},
      {:poolboy,   "~> 1.5"},
      {:vex,       "~> 0.5"},
-     {:apns,      github: "tuvistavie/apns4ex", branch: "dev"},
+     {:apns,      github: "chvanikoff/apns4ex"},
      {:excoveralls, "~> 0.5", only: :test},
      {:dialyxir, "~> 0.3", only: :dev},
      {:earmark,   "~> 0.1", only: :dev},
