@@ -7,12 +7,6 @@ defmodule Pushex.App do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    unless Application.get_env(:apns, :pools) do
-      Application.put_env(:apns, :pools, [])
-      Application.put_env(:apns, :callback_module, Pushex.APNS.Callback)
-    end
-    Application.ensure_all_started(:apns)
-
     Application.put_env(:vex, :sources, [Pushex.Validators, Vex.Validators])
 
     config = Pushex.Config.make_defaults(Application.get_all_env(:pushex))

@@ -20,8 +20,7 @@ defmodule Pushex.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :httpoison, :vex, :poolboy],
-     included_applications: [:apns],
+    [applications: [:logger, :httpoison, :vex, :poolboy, :apns],
      mod: {Pushex.App, []},
      description: 'Mobile push notification library']
   end
