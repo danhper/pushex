@@ -15,7 +15,7 @@ The main goals are the following:
   * Common API for iOS and Android
   * Multiple applications handling
   * Proper error and response handling
-  * Testabe using a sanbox mode
+  * Testable using a sanbox mode
 
 ### Status
 
