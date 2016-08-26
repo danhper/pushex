@@ -29,12 +29,10 @@ The API is still subject to change, with a minor version bump for each change.
 Add the following to your dependencies mix.ex.
 
 ```elixir
-[{:pushex, github: "tuvistavie/pushex"}]
+[{:pushex, "~> 0.1"}]
 ```
 
 Then, add `:pushex` to your applications.
-
-I will make the next upload to Hex once the forked dependencies get merged and uploaded.
 
 ## Usage
 
@@ -86,6 +84,7 @@ If you want to use the same message for both platforms, you can define messages 
 ```
 message = %{
   common: "this will be in both payloads",
+  other: "this will also be in both payloads",
   apns: %{
     alert: "My alert",
     badge: 1

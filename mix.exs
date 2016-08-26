@@ -1,7 +1,7 @@
 defmodule Pushex.Mixfile do
   use Mix.Project
 
-  @version "0.0.5"
+  @version "0.1"
 
   def project do
     [app: :pushex,
@@ -33,7 +33,7 @@ defmodule Pushex.Mixfile do
      {:poison,    "~> 1.5 or ~> 2.1"},
      {:poolboy,   "~> 1.5"},
      {:vex,       "~> 0.5"},
-     {:apns,      github: "chvanikoff/apns4ex"},
+     {:apns,      "~> 0.9.4"},
      {:excoveralls, "~> 0.5", only: :test},
      {:dialyxir, "~> 0.3", only: :dev},
      {:earmark,   "~> 0.1", only: :dev},

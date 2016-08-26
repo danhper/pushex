@@ -1,4 +1,4 @@
-%{"apns": {:git, "https://github.com/chvanikoff/apns4ex.git", "b07b4de33df14ca6036eed588e070954455989cd", []},
+%{"apns": {:hex, :apns, "0.9.4", "ae5207798f7962f4fe863fdea0395bc141d2e25c1d273d3e47153c597b338a53", [:mix], [{:connection, "~> 1.0.2", [hex: :connection, optional: false]}, {:poison, "~> 1.5 or ~> 2.1", [hex: :poison, optional: false]}, {:poolboy, "~> 1.5", [hex: :poolboy, optional: false]}]},
   "bbmustache": {:hex, :bbmustache, "1.0.4", "7ba94f971c5afd7b6617918a4bb74705e36cab36eb84b19b6a1b7ee06427aa38", [:rebar], []},
   "certifi": {:hex, :certifi, "0.4.0", "a7966efb868b179023618d29a407548f70c52466bf1849b9e8ebd0e34b7ea11f", [:rebar3], []},
   "cf": {:hex, :cf, "0.2.1", "69d0b1349fd4d7d4dc55b7f407d29d7a840bf9a1ef5af529f1ebe0ce153fc2ab", [:rebar3], []},
