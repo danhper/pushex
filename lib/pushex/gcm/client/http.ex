@@ -33,7 +33,7 @@ defmodule Pushex.GCM.Client.HTTP do
   defp process_notification_response({:ok, %HTTPoison.Response{status_code: 200, body: body}}) do
     response = body
     |> Poison.decode!
-    |> Dict.take(@expected_fields)
+    |> Map.take(@expected_fields)
     |> Enum.map(fn({k, v}) -> {String.to_atom(k), v} end)
     {:ok, struct(Pushex.GCM.Response, response)}
   end
