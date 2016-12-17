@@ -81,7 +81,7 @@ handling documentation for more information.
 
 If you want to use the same message for both platforms, you can define messages as follow:
 
-```
+```elixir
 message = %{
   common: "this will be in both payloads",
   other: "this will also be in both payloads",
