@@ -1,7 +1,7 @@
 defmodule Pushex.Mixfile do
   use Mix.Project
 
-  @version "0.1.0"
+  @version "0.1.1"
 
   def project do
     [app: :pushex,
@@ -12,8 +12,8 @@ defmodule Pushex.Mixfile do
      source_url: "https://github.com/tuvistavie/pushex",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     package: package,
-     deps: deps,
+     package: package(),
+     deps: deps(),
      test_coverage: [tool: ExCoveralls],
      dialyzer: [plt_add_apps: [:poison, :httpoison, :vex]],
      docs: [source_ref: "#{@version}", extras: ["README.md"], main: "readme"]]
@@ -30,13 +30,13 @@ defmodule Pushex.Mixfile do
 
   defp deps do
     [{:httpoison, "~> 0.8"},
-     {:poison,    "~> 1.5 or ~> 2.1"},
+     {:poison,    "~> 1.5 or ~> 2.1 or ~> 3.0"},
      {:poolboy,   "~> 1.5"},
      {:vex,       "~> 0.5"},
      {:apns,      "~> 0.9.4"},
      {:excoveralls, "~> 0.5", only: :test},
      {:dialyxir, "~> 0.3", only: :dev},
-     {:earmark,   "~> 0.1", only: :dev},
+     {:earmark,   "~> 1.0", only: :dev},
      {:ex_doc,    "~> 0.11", only: :dev}]
   end
 

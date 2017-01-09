@@ -9,8 +9,8 @@ defmodule Pushex.APNS.Client do
   @callback send_notification(request :: APNS.Request.t) :: :ok
 
   def send_notification(request) do
-    impl.send_notification(request)
+    impl().send_notification(request)
   end
 
-  defp impl, do: Application.get_env(:pushex, :apns)[:client_impl]
+  defp impl(), do: Application.get_env(:pushex, :apns)[:client_impl]
 end

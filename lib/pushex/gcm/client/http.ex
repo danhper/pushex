@@ -10,7 +10,7 @@ defmodule Pushex.GCM.Client.HTTP do
   @expected_fields ~w(multicast_id success failure canonical_ids results)
 
   def process_url(url) do
-    Path.join(endpoint, url)
+    Path.join(endpoint(), url)
   end
 
   defp process_request_body(body) when is_binary(body), do: body
@@ -44,7 +44,7 @@ defmodule Pushex.GCM.Client.HTTP do
     {:error, %Pushex.GCM.HTTPError{status_code: 0, reason: reason}}
   end
 
-  defp endpoint do
+  defp endpoint() do
     Application.get_env(:pushex, :gcm)[:endpoint]
   end
 end
