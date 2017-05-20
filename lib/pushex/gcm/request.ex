@@ -20,7 +20,8 @@ defmodule Pushex.GCM.Request do
     :time_to_live,
     :restricted_package_name,
     :data,
-    :notification
+    :notification,
+    :send_as_data
   ]
 
   @type t :: %__MODULE__{
@@ -63,6 +64,8 @@ defmodule Pushex.GCM.Request do
     type: [is: [:map, :nil]]
   validates :notification,
     type: [is: [:map, :nil]]
+  validates :send_as_data,
+    type: [is: [:boolean, :nil]]
 
 
   def create(params) do
@@ -92,11 +95,21 @@ defmodule Pushex.GCM.Request do
 end
 
 defimpl Poison.Encoder, for: Pushex.GCM.Request do
-  def encode(notification, options) do
-    Map.from_struct(notification)
+  def encode(request, options) do
+    request
+    |> Map.from_struct()
+    |> process_data()
     |> Enum.filter(fn {_key, value} -> not is_nil(value) end)
     |> Enum.into(%{})
     |> Map.delete(:app)
     |> Poison.encode!(options)
   end
+
+  defp process_data(%{send_as_data: true} = req) do
+    req
+    |> Map.put(:data, Map.get(req, :notification))
+    |> Map.delete(:notification)
+    |> Map.delete(:send_as_data)
+  end
+  defp process_data(req), do: Map.delete(req, :send_as_data)
 end
