@@ -88,6 +88,7 @@ defmodule Pushex.Validators.Type do
   defp do_validate(value, :number)    when is_number(value),    do: true
   defp do_validate(value, :integer)   when is_integer(value),   do: true
   defp do_validate(value, :float)     when is_float(value),     do: true
+  defp do_validate(value, :boolean)   when is_boolean(value),   do: true
   defp do_validate(value, :binary)    when is_binary(value),    do: true
   defp do_validate(value, :bitstring) when is_bitstring(value), do: true
   defp do_validate(value, :tuple)     when is_tuple(value),     do: true
