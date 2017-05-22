@@ -20,8 +20,7 @@ defmodule Pushex.GCM.Request do
     :time_to_live,
     :restricted_package_name,
     :data,
-    :notification,
-    :send_as_data
+    :notification
   ]
 
   @type t :: %__MODULE__{
@@ -64,8 +63,6 @@ defmodule Pushex.GCM.Request do
     type: [is: [:map, :nil]]
   validates :notification,
     type: [is: [:map, :nil]]
-  validates :send_as_data,
-    type: [is: [:boolean, :nil]]
 
 
   def create(params) do
@@ -77,11 +74,28 @@ defmodule Pushex.GCM.Request do
 
   def create!(notification, app, opts) do
     params = opts
-    |> Keyword.put(:notification, notification)
+    |> Keyword.merge(create_base_request(notification))
     |> Keyword.put(:app, app)
     |> normalize_opts
 
     Pushex.Util.create_struct!(__MODULE__, params)
+  end
+
+  defp create_base_request(notification) do
+    keys = ["notification", "data", :notification, :data]
+    req = Enum.reduce(keys, %{}, fn(elem, acc) -> add_field(acc, notification, elem) end)
+    if Enum.empty?(req) do
+      [notification: notification]
+    else
+      Keyword.new(req)
+    end
+  end
+
+  defp add_field(request, notification, field) do
+    case Map.fetch(notification, field) do
+      {:ok, value} -> Map.put(request, field, value)
+      :error -> request
+    end
   end
 
   defp normalize_opts(opts) do
@@ -98,18 +112,9 @@ defimpl Poison.Encoder, for: Pushex.GCM.Request do
   def encode(request, options) do
     request
     |> Map.from_struct()
-    |> process_data()
     |> Enum.filter(fn {_key, value} -> not is_nil(value) end)
     |> Enum.into(%{})
     |> Map.delete(:app)
     |> Poison.encode!(options)
   end
-
-  defp process_data(%{send_as_data: true} = req) do
-    req
-    |> Map.put(:data, Map.get(req, :notification))
-    |> Map.delete(:notification)
-    |> Map.delete(:send_as_data)
-  end
-  defp process_data(req), do: Map.delete(req, :send_as_data)
 end

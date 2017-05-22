@@ -26,6 +26,21 @@ defmodule Pushex.GCM.RequestTest do
     assert %Request{app: @app, to: "bar"} = Request.create!(app: @app, to: "bar")
   end
 
+  test "create with neither notification or data" do
+    notification = %{foo: "bar"}
+    assert %Request{notification: ^notification, data: nil} = Request.create!(notification, @app, to: "bar")
+  end
+
+  test "create with notification" do
+    notification = %{foo: "bar"}
+    assert %Request{notification: ^notification, data: nil} = Request.create!(%{notification: notification}, @app, to: "bar")
+  end
+
+  test "create with data" do
+    notification = %{foo: "bar"}
+    assert %Request{data: ^notification, notification: nil} = Request.create!(%{data: notification}, @app, to: "bar")
+  end
+
   test "create! raises on failure" do
     assert_raise Pushex.ValidationError, fn ->
       Request.create!(app: @app, to: 1)
