@@ -12,15 +12,21 @@ defmodule Pushex.APNS.App do
 
   defstruct [
     :name,
-    :certfile,
     :env,
-    :cert,
     :feedback_interval,
+    :support_old_ios,
+    :expiry,
+
+    :cert,
+    :certfile,
     :cert_password,
     :key,
     :keyfile,
-    :support_old_ios,
-    :expiry
+
+    :pem,
+    :pemfile,
+    :team_id,
+    :key_identifier
   ]
 
   validates :name,
