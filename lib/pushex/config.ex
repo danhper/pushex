@@ -5,6 +5,11 @@ defmodule Pushex.Config do
 
   @default_gcm_endpoint "https://android.googleapis.com/gcm"
 
+  @default_apns_development_endpoint "api.development.push.apple.com"
+  @default_apns_production_endpoint "api.push.apple.com"
+  @default_apns_protocol :https
+  @default_apns_port 443
+
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
@@ -56,6 +61,10 @@ defmodule Pushex.Config do
     apns_config =
       Keyword.get(config, :apns, [])
       |> Keyword.put_new(:pool_options, [size: 100, max_overflow: 20])
+      |> Keyword.put_new(:dev_endpoint, @default_apns_development_endpoint)
+      |> Keyword.put_new(:prod_endpoint, @default_apns_production_endpoint)
+      |> Keyword.put_new(:port, @default_apns_port)
+      |> Keyword.put_new(:protocol, @default_apns_protocol)
 
     config
     |> Keyword.put(:gcm, gcm_config)

@@ -1,4 +1,4 @@
-defmodule Pushex.App do
+defmodule Pushex.Application do
   @moduledoc false
 
   use Application
