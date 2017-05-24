@@ -11,6 +11,10 @@ defmodule Pushex.APNS.Worker do
     {:ok, %{app: app}}
   end
 
+  def send_message(worker, message) do
+    GenServer.call(worker, {:send, message})
+  end
+
   def handle_cast(:connect, %{app: app} = state) do
     validate_authentication(app)
     ssl_options = Pushex.APNS.App.ssl_options(app)
@@ -21,6 +25,17 @@ defmodule Pushex.APNS.Worker do
       |> Map.put(:use_jwt, Pushex.APNS.App.use_jwt?(app))
     {:noreply, new_state}
   end
+
+  def handle_call({:send, message}, _from, %{app: app, use_jwt: use_jwt, conn_pid: conn_pid}) do
+    headers = make_headers(app, use_jwt)
+    :h2_client.sync_request(conn_pid, headers, Poison.encode!(message))
+  end
+
+  defp make_headers(app, true) do
+    token = Pushex.APNS.JWTManager.fetch_token(app)
+    [{"Authorization", "Bearer #{token}"}]
+  end
+  defp make_headers(_app, false), do: []
 
   defp validate_authentication(app) do
     unless Pushex.APNS.App.can_authenticate?(app) do
