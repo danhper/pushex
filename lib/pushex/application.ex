@@ -25,6 +25,7 @@ defmodule Pushex.Application do
       worker(Pushex.Config, [config]),
       worker(:gen_event, [{:local, Pushex.EventManager}]),
       supervisor(Pushex.Watcher, [Pushex.Config, :event_handlers, []]),
+      supervisor(Pushex.APNS.PoolSupervisor, []),
       :poolboy.child_spec(Pushex.GCM, gcm_pool_options, [client: Pushex.GCM.Client]),
       :poolboy.child_spec(Pushex.APNS, apns_pool_options, [client: Pushex.APNS.Client]),
       worker(Pushex.AppManager.Memory, []),
