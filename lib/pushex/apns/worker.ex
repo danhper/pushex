@@ -26,9 +26,10 @@ defmodule Pushex.APNS.Worker do
     {:noreply, new_state}
   end
 
-  def handle_call({:send, message}, _from, %{app: app, use_jwt: use_jwt, conn_pid: conn_pid}) do
+  def handle_call({:send, message}, {pid, _ref}, %{app: app, use_jwt: use_jwt, conn_pid: conn_pid} = state) do
     headers = make_headers(app, use_jwt)
-    :h2_client.sync_request(conn_pid, headers, Poison.encode!(message))
+    {:ok, stream_id} = :h2_client.send_request(conn_pid, headers, Poison.encode!(message))
+    # {:ok, put_in(state, [stream_id, )}
   end
 
   defp make_headers(app, true) do

@@ -2,6 +2,7 @@ defmodule Pushex.APNS.PoolSupervisor do
   use Supervisor
 
   @base_pool_name "apns_pool"
+  @pool_size 20
 
   def start_link() do
     Supervisor.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -20,7 +21,7 @@ defmodule Pushex.APNS.PoolSupervisor do
   end
 
   defp make_spec(app, pool_name) do
-    pool_options = [name: {:local, pool_name}, worker_module: Pushex.APNS.Worker]
+    pool_options = [name: {:local, pool_name}, worker_module: Pushex.APNS.Worker, size: @pool_size]
     :poolboy.child_spec(pool_name, pool_options, app)
   end
 
