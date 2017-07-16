@@ -1,6 +1,8 @@
 defmodule Pushex.APNS.Worker do
   use GenServer
 
+  alias Pushex.APNS.PoolSupervisor
+
   def start_link(app) do
     {:ok, pid} = result = GenServer.start_link(__MODULE__, app)
     GenServer.cast(pid, :connect)
@@ -11,8 +13,11 @@ defmodule Pushex.APNS.Worker do
     {:ok, %{app: app}}
   end
 
-  def send_message(worker, message) do
-    GenServer.call(worker, {:send, message})
+  def send_message(app, message) do
+    case PoolSupervisor.ensure_pool_started(app) do
+      {:ok, pid} -> :poolboy.transaction(pid, &GenServer.call(&1, {:send, message}))
+      err -> err
+    end
   end
 
   def handle_cast(:connect, %{app: app} = state) do
@@ -26,10 +31,10 @@ defmodule Pushex.APNS.Worker do
     {:noreply, new_state}
   end
 
-  def handle_call({:send, message}, {pid, _ref}, %{app: app, use_jwt: use_jwt, conn_pid: conn_pid} = state) do
+  def handle_call({:send, message}, _from, %{app: app, use_jwt: use_jwt, conn_pid: conn_pid} = state) do
     headers = make_headers(app, use_jwt)
-    {:ok, stream_id} = :h2_client.send_request(conn_pid, headers, Poison.encode!(message))
-    # {:ok, put_in(state, [stream_id, )}
+    result = :h2_client.send_request(conn_pid, headers, Poison.encode!(message))
+    {:reply, result, state}
   end
 
   defp make_headers(app, true) do

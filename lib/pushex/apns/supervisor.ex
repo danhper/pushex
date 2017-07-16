@@ -15,6 +15,7 @@ defmodule Pushex.APNS.Supervisor do
 
     children = [
       supervisor(Pushex.APNS.PoolSupervisor, []),
+      worker(Pushex.APNS.JWTManager, [[name: Pushex.APNS.JWTManager]]),
       :poolboy.child_spec(Pushex.APNS, apns_pool_options, [client: Pushex.APNS.Client]),
       worker(Pushex.APNS.SSLPoolManager, [])
     ]
