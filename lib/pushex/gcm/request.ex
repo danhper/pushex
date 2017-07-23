@@ -74,9 +74,10 @@ defmodule Pushex.GCM.Request do
 
   def create!(notification, app, opts) do
     params = opts
-    |> Keyword.merge(create_base_request(notification))
-    |> Keyword.put(:app, app)
-    |> normalize_opts
+    |> Enum.into(%{})
+    |> Map.merge(create_base_request(notification))
+    |> Map.put(:app, app)
+    |> normalize_opts()
 
     Pushex.Util.create_struct!(__MODULE__, params)
   end
@@ -85,9 +86,9 @@ defmodule Pushex.GCM.Request do
     keys = ["notification", "data", :notification, :data]
     req = Enum.reduce(keys, %{}, fn(elem, acc) -> add_field(acc, notification, elem) end)
     if Enum.empty?(req) do
-      [notification: notification]
+      %{notification: notification}
     else
-      Keyword.new(req)
+      req
     end
   end
 
@@ -99,9 +100,9 @@ defmodule Pushex.GCM.Request do
   end
 
   defp normalize_opts(opts) do
-    if is_list(opts[:to]) do
-      {to, opts} = Keyword.pop(opts, :to)
-      Keyword.put(opts, :registration_ids, to)
+    if is_list(Map.get(opts, :to)) do
+      {to, opts} = Map.pop(opts, :to)
+      Map.put(opts, :registration_ids, to)
     else
       opts
     end
