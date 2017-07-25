@@ -4,14 +4,10 @@ defmodule Pushex.WatcherTest do
   alias Pushex.GCM.{Request, Response}
 
   defmodule BadHandler do
-    @behaviour :gen_event
+    use Pushex.EventHandler
 
-    def init(args) do
-      {:ok, args}
-    end
-
-    def handle_call(_request, state) do
-      {:ok, state}
+    def handle_event({:request, _request, {_pid, _ref}}, _state) do
+      raise "I hate requests"
     end
 
     def handle_event({:response, _response, _request, {pid, ref}}, state) do
