@@ -3,7 +3,7 @@
   "bbmustache": {:hex, :bbmustache, "1.0.4", "7ba94f971c5afd7b6617918a4bb74705e36cab36eb84b19b6a1b7ee06427aa38", [:rebar], []},
   "certifi": {:hex, :certifi, "1.1.0", "c9b71a547016c2528a590ccfc28de786c7edb74aafa17446b84f54e04efc00ee", [:rebar3], [], "hexpm"},
   "cf": {:hex, :cf, "0.2.1", "69d0b1349fd4d7d4dc55b7f407d29d7a840bf9a1ef5af529f1ebe0ce153fc2ab", [:rebar3], []},
-  "chatterbox": {:hex, :chatterbox, "0.4.2", "ba68296fa79f0ca31139713c688c350a26c8844e1244f1736d7845c1c72e5f87", [:rebar3], [{:hpack, "~>0.2.3", [hex: :hpack_erl, repo: "hexpm", optional: false]}, {:lager, "~>3.2.4", [hex: :lager, repo: "hexpm", optional: false]}], "hexpm"},
+  "chatterbox": {:hex, :chatterbox, "0.5.0", "69f5a1f36f905472b7662a301e67309dd3cae7d0ca1b2e52c14d43ee7df4c3a3", [:rebar3], [{:hpack, "~>0.2.3", [hex: :hpack_erl, repo: "hexpm", optional: false]}, {:lager, "~>3.2.4", [hex: :lager, repo: "hexpm", optional: false]}], "hexpm"},
   "connection": {:hex, :connection, "1.0.4", "a1cae72211f0eef17705aaededacac3eb30e6625b04a6117c1b2db6ace7d5976", [:mix], [], "hexpm"},
   "cowlib": {:hex, :cowlib, "1.3.0", "6c80ca7f2863c0d7a21c946312baf473432b56a79e46e20bc27a3bac07c40439", [:make], [], "hexpm"},
   "dialyxir": {:hex, :dialyxir, "0.5.0", "5bc543f9c28ecd51b99cc1a685a3c2a1a93216990347f259406a910cf048d1d7", [:mix], [], "hexpm"},
