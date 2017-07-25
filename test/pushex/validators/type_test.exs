@@ -45,7 +45,7 @@ defmodule Pushex.Validators.TypeTest do
       {{1, 2},            :map},
       {[1, 2],            :tuple},
       {%{a: 2},           :list},
-      {<<239, 191, 191>>, :string},
+      {<<271, 191, 191>>, :string},
       {~r/foo/,           :string},
       {:a,                [:binary, :integer]}
     ]
@@ -89,11 +89,11 @@ defmodule Pushex.Validators.TypeTest do
 
   defp run_cases(valid_cases, invalid_cases) do
     Enum.each valid_cases, fn {value, type} ->
-      assert Vex.valid?([foo: value], foo: [type: [is: type]])
+      assert Vex.valid?([foo: value], foo: [type: [is: type]]), "expected #{inspect(value)} to have type #{inspect(type)}"
     end
 
     Enum.each invalid_cases, fn {value, type} ->
-      refute Vex.valid?([foo: value], foo: [type: [is: type]])
+      refute Vex.valid?([foo: value], foo: [type: [is: type]]), "expected #{inspect(value)} not to have type #{inspect(type)}"
     end
   end
 end
