@@ -4,7 +4,15 @@ defmodule Pushex.WatcherTest do
   alias Pushex.GCM.{Request, Response}
 
   defmodule BadHandler do
-    use GenEvent
+    @behaviour :gen_event
+
+    def init(args) do
+      {:ok, args}
+    end
+
+    def handle_call(_request, state) do
+      {:ok, state}
+    end
 
     def handle_event({:response, _response, _request, {pid, ref}}, state) do
       send pid, {:bad_handler, ref}
@@ -14,23 +22,23 @@ defmodule Pushex.WatcherTest do
 
   test "restarts children" do
     assert {:ok, _pid} = Pushex.Watcher.watch(Pushex.EventManager, BadHandler, [])
-    assert BadHandler in GenEvent.which_handlers(Pushex.EventManager)
+    assert BadHandler in :gen_event.which_handlers(Pushex.EventManager)
     ref = make_ref()
-    GenEvent.notify(Pushex.EventManager, {:response, %Response{}, %Request{}, {self(), ref}})
+    :gen_event.notify(Pushex.EventManager, {:response, %Response{}, %Request{}, {self(), ref}})
     assert_receive {:bad_handler, ^ref}
     # crash here
     Logger.remove_backend(Logger.Backends.Console)
-    GenEvent.notify(Pushex.EventManager, {:request, %Request{}, {self(), ref}})
+    :gen_event.notify(Pushex.EventManager, {:request, %Request{}, {self(), ref}})
     # wait for supervisor to restart handler
     :timer.sleep(100)
     Logger.add_backend(Logger.Backends.Console)
 
-    GenEvent.notify(Pushex.EventManager, {:response, %Response{}, %Request{}, {self(), ref}})
+    :gen_event.notify(Pushex.EventManager, {:response, %Response{}, %Request{}, {self(), ref}})
     assert_receive {:bad_handler, ^ref}
 
     assert :ok = Pushex.Watcher.unwatch(Pushex.EventManager, BadHandler)
-    GenEvent.notify(Pushex.EventManager, {:response, %Response{}, %Request{}, {self(), ref}})
+    :gen_event.notify(Pushex.EventManager, {:response, %Response{}, %Request{}, {self(), ref}})
     refute_receive {:bad_handler, ^ref}
-    refute BadHandler in GenEvent.which_handlers(Pushex.EventManager)
+    refute BadHandler in :gen_event.which_handlers(Pushex.EventManager)
   end
 end

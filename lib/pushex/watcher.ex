@@ -29,7 +29,7 @@ defmodule Pushex.Watcher do
   end
 
   def unwatch(mod, handler) do
-    GenEvent.remove_handler(mod, handler, [])
+    :gen_event.delete_handler(mod, handler, [])
   end
 
   def watcher(mod, handler, args) do
@@ -38,7 +38,7 @@ defmodule Pushex.Watcher do
 
   def init({mod, handler, args}) do
     ref = Process.monitor(mod)
-    case GenEvent.add_mon_handler(mod, handler, args) do
+    case :gen_event.add_sup_handler(mod, handler, args) do
       :ok ->
         {:ok, {mod, handler, ref}}
       {:error, :ignore} ->
@@ -56,13 +56,13 @@ defmodule Pushex.Watcher do
   end
 
   def handle_info({:gen_event_EXIT, handler, reason}, {mod, handler, _} = state) do
-    _ = Logger.error "GenEvent handler #{inspect handler} installed at #{inspect mod}\n" <>
+    _ = Logger.error ":gen_event handler #{inspect handler} installed at #{inspect mod}\n" <>
       "** (exit) #{format_exit(reason)}"
     {:stop, reason, state}
   end
 
   def handle_info({:DOWN, ref, _, _, reason}, {mod, handler, ref} = state) do
-    _ = Logger.error "GenEvent handler #{inspect handler} installed at #{inspect mod}\n" <>
+    _ = Logger.error ":gen_event handler #{inspect handler} installed at #{inspect mod}\n" <>
       "** (exit) #{format_exit(reason)}"
     {:stop, reason, state}
   end

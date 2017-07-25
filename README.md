@@ -152,7 +152,7 @@ end
 ### Handling responses
 
 To handle responses, you can define a module using `Pushex.EventHandler`
-which uses `GenEvent` to process events.
+which uses `:gen_event` to process events.
 
 ```elixir
 # config.exs

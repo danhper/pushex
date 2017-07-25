@@ -4,7 +4,7 @@ defmodule Pushex.EventHandler do
 
   Events can be implemented to log requests, responses or save them in a database for example.
 
-  Under the hood, it uses a `GenEvent`, so you will basically need to implement
+  Under the hood, it uses a `:gen_event`, so you will need to implement
   `handle_event` for the events you care about.
 
   The following events are emitted:
@@ -33,7 +33,7 @@ defmodule Pushex.EventHandler do
   @doc false
   defmacro __using__(_opts) do
     quote do
-      use GenEvent
+      @behaviour :gen_event
       @before_compile {unquote(__MODULE__), :add_default_handlers}
     end
   end
@@ -41,6 +41,14 @@ defmodule Pushex.EventHandler do
   @doc false
   defmacro add_default_handlers(_env) do
     quote do
+      def init(args) do
+        {:ok, args}
+      end
+
+      def handle_call(_request, state) do
+        {:ok, state}
+      end
+
       def handle_event({:request, _request, _info}, state), do: {:ok, state}
       def handle_event({:response, _response, _request, _info}, state), do: {:ok, state}
       def handle_event({:error, _error, _token}, state), do: {:ok, state}
