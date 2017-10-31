@@ -6,7 +6,7 @@ defmodule Pushex.APNS.Client do
   under the configuration `pushex: :apns` key
   """
 
-  @callback send_notification(request :: APNS.Request.t) :: :ok
+  @callback send_notification(request :: Pushex.APNS.Request.t) :: {:ok, Pushex.APNS.Response.t} | {:error, Pushex.APNS.Reponse}
 
   def send_notification(request) do
     impl().send_notification(request)

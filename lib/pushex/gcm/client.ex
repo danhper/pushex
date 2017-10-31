@@ -6,7 +6,7 @@ defmodule Pushex.GCM.Client do
   under the configuration `pushex: :gcm` key
   """
 
-  @callback send_notification(notification :: Pushex.GCM.Request.t) :: {:ok, Pushex.GCM.Response.t} | {:error, Pushex.GCM.HTTPError}
+  @callback send_notification(notification :: Pushex.GCM.Request.t) :: {:ok, Pushex.GCM.Response.t} | {:error, Pushex.GCM.HTTPError.t}
 
   def send_notification(notification) do
     impl().send_notification(notification)
