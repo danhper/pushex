@@ -5,7 +5,7 @@ defmodule Pushex.APNS.Client.Sandbox do
 
   def send_notification(request) do
     if request.to == :bad_id do
-      %Pushex.APNS.Response{failure: 1, results: [{:error, :invalid_token_size}]}
+      {:error, %Pushex.APNS.Response{failure: 1, results: [{:error, :invalid_token_size}]}}
     else
       count = request.to |> List.wrap |> Enum.count
       results = List.duplicate(:ok, count)

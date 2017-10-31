@@ -42,7 +42,7 @@ defmodule Pushex.EventHandler do
   defmacro add_default_handlers(_env) do
     quote do
       def init(args), do: {:ok, args}
-      def handle_call(_request, state), do: {:ok, state}
+      def handle_call(_request, state), do: {:ok, :ok, state}
       def handle_info(_info, state), do: {:ok, state}
       def code_change(_old_vsn, state, _extra), do: state
       def terminate(args, _state), do: :ok
