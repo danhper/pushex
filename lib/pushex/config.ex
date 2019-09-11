@@ -3,7 +3,7 @@ defmodule Pushex.Config do
 
   use GenServer
 
-  @default_gcm_endpoint "https://android.googleapis.com/gcm"
+  @default_gcm_endpoint "https://fcm.googleapis.com/fcm"
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
