@@ -29,7 +29,7 @@ The API is still subject to change, with a minor version bump for each change.
 Add the following to your dependencies mix.ex.
 
 ```elixir
-[{:pushex, "~> 0.1"}]
+[{:pushex, "~> 0.2"}]
 ```
 
 Then, add `:pushex` to your applications.
