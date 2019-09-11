@@ -3,6 +3,11 @@ defmodule Pushex.APNS.SSLPoolManager do
 
   alias Pushex.APNS.App
 
+  @doc false
+  def init(init_args) do
+    {:ok, init_args}
+  end
+
   def start_link do
     GenServer.start_link(__MODULE__, %{pools: []}, name: __MODULE__)
   end

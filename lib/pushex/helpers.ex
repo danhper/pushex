@@ -20,14 +20,14 @@ defmodule Pushex.Helpers do
 
       app    = %Pushex.GCM.App{name: "some name", auth_key: "my_auth_key"}
       reg_id = get_my_registration_id
-      Pushex.send_notification(notification, to: reg_id, with_app: app)
+      Pushex.push(notification, to: reg_id, with_app: app)
 
       # with default_app setup
-      Pushex.send_notification(notification, to: reg_id, using: :gcm)
+      Pushex.push(notification, to: reg_id, using: :gcm)
 
 
       request = %Pushex.GCM.Request{app: app, notification: notification, to: reg_id}
-      Pushex.send_notification(request)
+      Pushex.push(request)
   """
   @spec send_notification(Pushex.GCM.request | Pushex.APNS.request | map, Keyword.t) :: reference
   def send_notification(request, opts \\ [])

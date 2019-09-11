@@ -4,7 +4,7 @@ defmodule Pushex.Util do
   end
   defp validate(data, settings) do
     case Vex.errors(data, settings) do
-      errors when length(errors) > 0 -> {:error, errors}
+      errors when errors != [] -> {:error, errors}
       _ -> {:ok, data}
     end
   end

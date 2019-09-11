@@ -3,7 +3,7 @@ defmodule Pushex.EventHandler.Sandbox do
   The event handler used when sandbox mode is activated.
 
   It will send a message containing the response, request and pid/ref information
-  back to the caller of `Pushex.send_notification/2` and record the notification
+  back to the caller of `Pushex.push/2` and record the notification
   to `Pushex.Sandbox`.
   """
 

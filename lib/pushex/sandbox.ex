@@ -4,7 +4,7 @@ defmodule Pushex.Sandbox do
 
   This is meant to be used in tests, and should not be used in production.
   Note that all operations are dependent on the `pid`, so the process
-  calling and `Pushex.send_notification/2` and the process calling `Pushex.Sandbox.list_notifications/1`
+  calling and `Pushex.push/2` and the process calling `Pushex.Sandbox.list_notifications/1`
   must be the same, or the `pid` should be passed explicitly otherwise.
   """
 
@@ -53,6 +53,11 @@ defmodule Pushex.Sandbox do
   def clear_notifications(opts \\ []) do
     pid = opts[:pid] || self()
     GenServer.call(__MODULE__, {:clear_notifications, pid})
+  end
+
+  @doc false
+  def init(init_args) do
+    {:ok, init_args}
   end
 
   @doc false
